@@ -1,6 +1,6 @@
 import { auth, db, storage } from '../core/firebase';
 import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const recipeCollection = collection(db, "recipes");
 
@@ -8,7 +8,7 @@ const getRecipesByQuery = async (query) => {
     const querySnapshot = await getDocs(query);
     let recipes = [];
     querySnapshot.forEach((doc) => {
-        recipes.push(doc.data());
+        recipes.push({ ...doc.data(), id: doc.id });
     });
 
     return recipes;
@@ -36,7 +36,7 @@ export const addRecipe = async (recipe) => {
         instructions: recipe.instructions,
         user: userId,
         fav_count: 0,
-        image: "https://source.unsplash.com/user/wsanter",
+        image: recipe.imageUrl || "https://source.unsplash.com/user/wsanter", //mock image
     };
 
     // Save the recipe to Firestore

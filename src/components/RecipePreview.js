@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
 container: {
     display: 'flex',
     flexDirection: 'column',
-    height: 200,
-    width: 170,
+    height: 170,
+    width: 150,
     borderRadius: 20,
     backgroundColor: '#CBB18A',
     borderWidth: 1,

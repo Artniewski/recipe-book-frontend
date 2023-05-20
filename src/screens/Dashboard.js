@@ -78,13 +78,13 @@ const styles = StyleSheet.create({
 
   content:{
     display: 'grid', // use display: grid instead of display: flex
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', // set the grid template columns
-    gridGap: 10, // set the space between each item
+    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', // set the grid template columns
+    gridGap: 5, // set the space between each item
     alignItems: 'center',
     justifyItems: 'center',
-    padding: 20,
-    paddingLeft: 30,
-    paddingRight: 30,
+    padding: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
     overflow: 'scroll',
   },
 })

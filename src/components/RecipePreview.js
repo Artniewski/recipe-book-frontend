@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
-import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { View, Image, StyleSheet, TouchableOpacity, Text, Button } from 'react-native'
 import { Searchbar } from 'react-native-paper';
 
 export default function RecipePreview(props) {
 
 
     return (
-        <View style={styles.container}>
-            <Image style={styles.image} source={require('../assets/logo.png')} />
+        <TouchableOpacity style={styles.container} onPress={props.onPress}>
+            <Image style={styles.image} source={{ uri: props.image }}/>
             <View style={styles.bar}>
                 <View style={styles.topRow}>
-                    <Text>{props.title}</Text>
+                    <Text style={styles.topRowText}>{props.title}</Text>
                 </View>
                 <View style={styles.bottomRow}>
                     <Image style={styles.icon} source={require('../assets/icon_alarm.svg')} />
@@ -19,7 +19,7 @@ export default function RecipePreview(props) {
                     <Text>{props.likes}</Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 
@@ -32,8 +32,6 @@ container: {
     borderRadius: 20,
     backgroundColor: '#CBB18A',
     borderWidth: 1,
-    
-
 },
 image: {
     width: '100%',
@@ -55,6 +53,9 @@ topRow:{
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+},
+topRowText:{
+    fontSize: 20,
 },
 bottomRow:{
     display: 'flex',

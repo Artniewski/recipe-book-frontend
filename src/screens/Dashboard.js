@@ -5,6 +5,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import {logoutUser} from '../api/auth-api'
 import RecipePreview from '../components/RecipePreview'
 import { ScrollView } from 'react-native-gesture-handler'
+import { Menu } from 'react-native-paper'
 
 export default function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,12 +20,14 @@ export default function Dashboard() {
   }
 
   return (
-    <View style={{height: '100%'}}>
+    <View style={{height: '100%',  width: '100%'}}>
+      <View style={{height: 50, width: '100%', position: 'fixed', zIndex: 1}}>
 
     <TopBar
         onHamburgerPressed={handleMenuPress}
         style={styles.topBar}
-    />
+        />
+      </View>
 
     <View style={styles.content}>
       {[1,2,3,4,5,6,7,8,9,10].map((item) => (
@@ -33,6 +36,8 @@ export default function Dashboard() {
         title={"Recipe " + item}
         time="30 min"
         likes="100"
+        image="https://source.unsplash.com/user/wsanter"
+        onPress={() => console.log("pressed item"+item)}
         />
         ))
       }
@@ -55,6 +60,8 @@ const styles = StyleSheet.create({
   topBar:{
     height: 50,
     width: '100%',
+    
+    
   },
 
   translucent:{
@@ -64,7 +71,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     position: 'absolute',
     height: '100%',
-    width: '100%'
+    width: '100%',
+    zIndex: 2,
   },
 
   hamburger:{
@@ -74,6 +82,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
+    zIndex: 3,
   },
 
   content:{
@@ -85,8 +94,9 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 15,
     paddingRight: 15,
-    overflow: 'scroll',
-  },
+    paddingTop: 80,
+    zIndex: 0,
+    },
 })
 
 

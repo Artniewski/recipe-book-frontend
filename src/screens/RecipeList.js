@@ -1,17 +1,39 @@
-import React from 'react';
-import { Button, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, FlatList } from 'react-native';
+import { getAllRecipes } from '../api/recipe-api';
 
-export default function RecipeList({ navigation }) {
+const RecipeList = () => {
+  const [recipes, setRecipes] = useState([]);
+
+  const fetchRecipes = async () => {
+    const recipeList = await getAllRecipes();
+    setRecipes(recipeList);
+  };
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Button title="Create Recipe" onPress={() => navigation.navigate('RecipeForm')} />
-    </View>
+    <FlatList
+      data={recipes}
+      keyExtractor={(item) => item}
+      renderItem={({ item }) => (
+        <View style={{ padding: 20 }} key={item}>
+          <Text>Title: {item.title}</Text>
+          <Text>Time: {item.time} minutes</Text>
+          <Text>Ingredients: {item.ingredients}</Text>
+          <Text>Instructions: {item.instructions}</Text>
+          <Text>User: {item.user}</Text>
+          <Text>Favorite Count: {item.fav_count}</Text>
+          <Image
+            source={{ uri: item.image }}
+            style={{ width: '100%', height: 200 }}
+          />
+        </View>
+      )}
+    />
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-});
+export default RecipeList;

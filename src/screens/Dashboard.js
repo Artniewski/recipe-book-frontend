@@ -1,51 +1,97 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image } from 'react-native'
 import {logoutUser} from '../api/auth-api'
-import RecipePreview from '../components/RecipePreview'
-import { ScrollView } from 'react-native-gesture-handler'
-import { Menu } from 'react-native-paper'
+import { BottomNavigation } from 'react-native-paper'
+import Home from '../components/Home'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+
+
+const HomeRoute = () => <Home />;
+const FavRoute = () => <Home />;
+const BookRoute = () => <Home />;
+
+const Tab = createBottomTabNavigator();
 
 export default function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [index, setIndex] = useState(0);
+
 
   const handleMenuPress = () => {
     console.log("pressed");
     setMenuOpen(!menuOpen);
   };
 
-  const handleLogout = () => {
-    logoutUser();
-  }
+  const [routes] = useState([
+    { key: 'book', title: 'Book', icon: '../assets/icon_heart.png' },
+    { key: 'home', title: 'Home', icon: 'home' },
+    { key: 'fav', title: 'Favourite', icon: 'heart' }]
+    );
+
+  
+
+  const onIndexChange = (i) => {
+    console.log(i);
+    setIndex(i);
+  };
+
+  const renderScene = BottomNavigation.SceneMap({
+    home: HomeRoute,
+    fav: FavRoute,
+    book: BookRoute,
+  });
+
 
   return (
     <View style={{height: '100%',  width: '100%'}}>
-      <View style={{height: 50, width: '100%', position: 'fixed', zIndex: 1}}>
 
     <TopBar
         onHamburgerPressed={handleMenuPress}
         style={styles.topBar}
-        />
-      </View>
+    />
 
-    <View style={styles.content}>
-      {[1,2,3,4,5,6,7,8,9,10].map((item) => (
-        <RecipePreview 
-        key={item}
-        title={"Recipe " + item}
-        time="30 min"
-        likes="100"
-        image="https://source.unsplash.com/user/wsanter"
-        onPress={() => console.log("pressed item"+item)}
-        />
-        ))
-      }
-    </View>
+
+    <Tab.Navigator
+    screenOptions={({ route }) => ({ 
+      headerShown: false,
+      tabBarActiveBackgroundColor: '#CBB18A',
+      tabBarInactiveBackgroundColor: '#CBB18A',
+    })}
+    initialRouteName='Home'
+    barStyle={{height:75}}
+    >
+      <Tab.Screen 
+      name="Favourite" 
+      component={FavRoute}
+      options={{
+        tabBarIcon: ({ focused, color, size }) => (
+          <Image style={styles.image} source={focused?require('../assets/icon_heart_white.svg'):require('../assets/icon_heart.svg')}/>
+        ),
+        tabBarLabel: ''
+      }} />
+      <Tab.Screen name="Home" component={HomeRoute}
+      options={{
+        tabBarIcon: ({ focused, color, size }) => (
+          <Image style={styles.image} source={focused?require('../assets/icon_globe_white.svg'):require('../assets/icon_globe.svg')}/>
+        ),
+        tabBarLabel: ''
+      }} />
+      <Tab.Screen name="Book" component={BookRoute} 
+      options={{
+        tabBarIcon: ({ focused, color, size }) => (
+          <Image style={styles.image} source={focused?require('../assets/icon_user_white.svg'):require('../assets/icon_user.svg')}/>
+        ),
+        tabBarLabel: ''
+      }}/>
+    </Tab.Navigator>
+
+
     {menuOpen && (
       <TouchableOpacity style={styles.translucent} onPress={handleMenuPress}>
         <View style={styles.hamburger}>
-        <Button mode="text" onPress={handleLogout}>
+        <Button mode="text" onPress={logoutUser}>
           Logout
         </Button>
       </View>
@@ -53,15 +99,17 @@ export default function Dashboard() {
       
       )}
     </View>
+
   )
 }
 
 const styles = StyleSheet.create({
+  navBar:{
+    backgroundColor: 'red',
+  },
   topBar:{
     height: 50,
-    width: '100%',
-    
-    
+    width: '100%', 
   },
 
   translucent:{
@@ -84,19 +132,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     zIndex: 3,
   },
-
-  content:{
-    display: 'grid', // use display: grid instead of display: flex
-    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', // set the grid template columns
-    gridGap: 5, // set the space between each item
-    alignItems: 'center',
-    justifyItems: 'center',
-    padding: 10,
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 80,
-    zIndex: 0,
-    },
+  image:{
+    width: 30,
+    height: 30,
+  }
 })
 
 

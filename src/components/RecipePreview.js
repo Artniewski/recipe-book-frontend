@@ -6,6 +6,7 @@ export default function RecipePreview(props) {
 
 
     return (
+        <View style={{padding: 10}}>
         <TouchableOpacity style={styles.container} onPress={props.onPress}>
             <Image style={styles.image} source={{ uri: props.image }}/>
             <View style={styles.bar}>
@@ -20,6 +21,7 @@ export default function RecipePreview(props) {
                 </View>
             </View>
         </TouchableOpacity>
+        </View>
     );
 }
 

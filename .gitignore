@@ -152,3 +152,5 @@ web-build/
 .expo-shared
 
 .npmrc
+
+git_fix.sh

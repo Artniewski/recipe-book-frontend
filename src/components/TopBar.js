@@ -24,22 +24,37 @@ const IconHamburger = (props) => (
   </Svg>
 )
 
+const IconSearch = (props) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={19}
+    height={19}
+    viewBox="0 0 19 19"
+    fill="none"
+    {...props}
+  >
+    <Path
+      stroke="#000"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={3.504}
+      d="M13.25 13.25 17 17M2 8.429a6.429 6.429 0 1 0 12.857 0A6.429 6.429 0 0 0 2 8.429Z"
+    />
+  </Svg>
+)
+
 
 export default function TopBar(props) {
 
-    const [searchQuery, setSearchQuery] = React.useState('');
-
-  const onChangeSearch = query => setSearchQuery(query);
 
   return (
     <View style={styles.container}>
-        <Searchbar
-            style={styles.search}
-            placeholder="Search"
-            onChangeText={onChangeSearch}
-            value={searchQuery}
+      <TouchableOpacity onPress={props.onSearchPressed}>
+        <IconSearch
+          style={styles.image}
         />
-        <TouchableOpacity onPress={props.onHamburgerPressed}>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={props.onHamburgerPressed}>
         <IconHamburger
           style={styles.image}
         />
@@ -57,7 +72,7 @@ container: {
     alignItems: 'center',
     backgroundColor: '#CBB18A',
     padding: 10,
-
+    justifyContent: 'space-between',
 },
 image: {
     width: 24,

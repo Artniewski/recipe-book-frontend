@@ -1,6 +1,5 @@
 import { auth, db, storage } from '../core/firebase';
-import { doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
-// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc, deleteDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 
 const recipeCollection = collection(db, "recipes");
 
@@ -42,6 +41,18 @@ export const addRecipe = async (recipe) => {
     // Save the recipe to Firestore
     await setDoc(doc(recipeCollection), recipeData);
 
+}
+
+export const editRecipe = async (recipeId, updatedData) => {
+    const recipeRef = doc(db, "recipes", recipeId);
+
+    await updateDoc(recipeRef, updatedData);
+}
+
+export const deleteRecipe = async (recipeId) => {
+    const recipeRef = doc(db, "recipes", recipeId);
+
+    await deleteDoc(recipeRef);
 }
 
 // export const addRecipe = async (recipe) => {

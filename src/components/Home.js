@@ -2,21 +2,25 @@ import React, {useState, useEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native'
-import {logoutUser} from '../api/auth-api'
 import RecipePreview from '../components/RecipePreview'
-import { BottomNavigation } from 'react-native-paper'
+import { getAllRecipes } from '../api/recipe-api';
 
 export default function Home() {
   
 
-  const recipes = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => ({
-      id: item,
-      title: 'Recipe '+item.toString(),
-      image: 'https://picsum.photos/300/200',
-      time: '30 min',
-      likes: 10,
-    }
-  ))
+  const [recipes, setRecipes] = useState([]);
+
+  const fetchRecipes = async () => {
+      const recipeList = await getAllRecipes();
+      console.log(recipeList);
+      setRecipes(recipeList);
+  };
+
+
+  useEffect(() => {
+      fetchRecipes();
+  }, []);
+
 
   return (
     <View style={{height: '100%',  width: '100%'}}>
@@ -30,7 +34,7 @@ export default function Home() {
           title={item.title}
           image={item.image}
           time={item.time}
-          likes={item.likes}
+          likes={item.fav_count}
           onPress={() => console.log('pressed'+item.id)}
         />
       )}
@@ -47,13 +51,13 @@ export default function Home() {
 const styles = StyleSheet.create({
 
   list:{
-    display: 'grid',
-    justifyContent: 'center',
+    display: 'flex',
+    alignItems: 'center',
   },
 
   content:{
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 5,
+    paddingRight: 5,
     paddingTop: 15,
     zIndex: 0,
     },

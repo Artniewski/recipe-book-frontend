@@ -1,6 +1,52 @@
 import React, {useState} from 'react'
 import { View, Image, StyleSheet, TouchableOpacity, Text, Button } from 'react-native'
 import { Searchbar } from 'react-native-paper';
+import { Svg, Path } from 'react-native-svg';
+
+
+const IconTime = (props) => (
+    <Svg
+      width={15}
+      height={15}
+      viewBox="0 0 17 17"
+        fill="none"
+      {...props}
+    >
+      <Path
+        stroke="#000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M11.5 9.25H7.75V5.5M2.5 2.125 4 1M13 2.125 11.5 1"
+      />
+      <Path
+        stroke="#000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M7.75 16a6.75 6.75 0 1 0 0-13.5 6.75 6.75 0 0 0 0 13.5Z"
+      />
+    </Svg>
+  )
+
+const IconHeart = (props) => (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={15}
+      height={15}
+      viewBox="0 0 18 18"
+      fill="none"
+      {...props}
+    >
+      <Path
+        stroke="#000"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M16.556 6.741c0 1.253-.462 2.457-1.287 3.348-1.899 2.05-3.74 4.19-5.71 6.165a1.106 1.106 0 0 1-1.599-.036l-5.674-6.129c-1.715-1.853-1.715-4.843 0-6.696 1.732-1.87 4.554-1.87 6.285 0l.207.223.206-.223c.83-.897 1.961-1.404 3.142-1.404 1.182 0 2.313.507 3.143 1.404.825.89 1.287 2.095 1.287 3.348Z"
+      />
+    </Svg>
+  )
+
 
 export default function RecipePreview(props) {
 
@@ -14,9 +60,9 @@ export default function RecipePreview(props) {
                     <Text style={styles.topRowText}>{props.title}</Text>
                 </View>
                 <View style={styles.bottomRow}>
-                    <Image style={styles.icon} source={require('../assets/icon_alarm.svg')} />
+                    <IconTime style={styles.icon}/>
                     <Text>{props.time}</Text>
-                    <Image style={styles.icon} source={require('../assets/icon_heart.svg')} />
+                    <IconHeart style={styles.icon}/>
                     <Text>{props.likes}</Text>
                 </View>
             </View>

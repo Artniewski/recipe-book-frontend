@@ -58,7 +58,7 @@ export const getUserFavoriteRecipes = async () => {
 export const getUserFavoriteRecipeIds = async () => {
     const userId = auth.currentUser.uid;
     const userFavoritesRef = doc(db, "favorites", userId);
-    const userFavoritesDoc = await getDoc(userFavoritesRef);
+    const userFavoritesDoc = await getDocs(userFavoritesRef);
     if (userFavoritesDoc.exists()) {
         return new Set(userFavoritesDoc.data().favorites);
     } else {

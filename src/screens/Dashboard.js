@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, StatusBar } from 'react-native'
-import {logoutUser} from '../api/auth-api'
+import { logoutUser } from '../api/auth-api'
 import Home from '../components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
@@ -73,15 +73,14 @@ const IconUser = (props) => (
 )
 
 
-const HomeRoute = () => <Home />;
-const FavRoute = () => <Favourite />;
-const BookRoute = () => <UserRecpies />;
-
 const Tab = createBottomTabNavigator();
 
-export default function Dashboard({navigation}) {
+export default function Dashboard({ navigation }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const HomeRoute = () => <Home />;
+  const FavRoute = () => <Favourite />;
+  const BookRoute = () => <UserRecpies navigation={navigation} />;
 
   const handleMenuPress = () => {
     console.log("pressed");
@@ -92,64 +91,64 @@ export default function Dashboard({navigation}) {
     console.log("search pressed");
     navigation.navigate('SearchScreen');
   };
-  
+
 
 
 
   return (
-    <View style={{height: '100%',  width: '100%'}}>
-    <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
-    <TopBar
+    <View style={{ height: '100%', width: '100%' }}>
+      <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
+      <TopBar
         onHamburgerPressed={handleMenuPress}
         onSearchPressed={onSearchPressed}
 
         style={styles.topBar}
-    />
+      />
 
 
-    <Tab.Navigator
-    screenOptions={({ route }) => ({ 
-      headerShown: false,
-      tabBarActiveBackgroundColor: '#CBB18A',
-      tabBarInactiveBackgroundColor: '#CBB18A',
-    })}
-    initialRouteName='Home'
-    barStyle={{height:75}}
-    >
-      <Tab.Screen 
-      name="Favourite" 
-      component={FavRoute}
-      options={{
-        tabBarIcon: ({ focused, color, size }) => (
-          <IconHeart style={styles.image} color={focused?'white':'black'}/>
-        ),
-        tabBarLabel: ''
-      }} />
-      <Tab.Screen name="Home" component={HomeRoute}
-      options={{
-        tabBarIcon: ({ focused, color, size }) => (
-          <IconGlobe style={styles.image} color={focused?'white':'black'}/>
-        ),
-        tabBarLabel: ''
-      }} />
-      <Tab.Screen name="Book" component={BookRoute} 
-      options={{
-        tabBarIcon: ({ focused, color, size }) => (
-          <IconUser style={styles.image} color={focused?'white':'black'}/>
-        ),
-        tabBarLabel: ''
-      }}/>
-    </Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarActiveBackgroundColor: '#CBB18A',
+          tabBarInactiveBackgroundColor: '#CBB18A',
+        })}
+        initialRouteName='Home'
+        barStyle={{ height: 75 }}
+      >
+        <Tab.Screen
+          name="Favourite"
+          component={FavRoute}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <IconHeart style={styles.image} color={focused ? 'white' : 'black'} />
+            ),
+            tabBarLabel: ''
+          }} />
+        <Tab.Screen name="Home" component={HomeRoute}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <IconGlobe style={styles.image} color={focused ? 'white' : 'black'} />
+            ),
+            tabBarLabel: ''
+          }} />
+        <Tab.Screen name="Book" component={BookRoute}
+          options={{
+            tabBarIcon: ({ focused, color, size }) => (
+              <IconUser style={styles.image} color={focused ? 'white' : 'black'} />
+            ),
+            tabBarLabel: ''
+          }} />
+      </Tab.Navigator>
 
 
-    {menuOpen && (
-      <TouchableOpacity style={styles.translucent} onPress={handleMenuPress}>
-        <View style={styles.hamburger}>
-        <Button mode="text" onPress={logoutUser}>
-          Logout
-        </Button>
-      </View>
-      </TouchableOpacity>
+      {menuOpen && (
+        <TouchableOpacity style={styles.translucent} onPress={handleMenuPress}>
+          <View style={styles.hamburger}>
+            <Button mode="text" onPress={logoutUser}>
+              Logout
+            </Button>
+          </View>
+        </TouchableOpacity>
 
       )}
     </View>
@@ -158,15 +157,15 @@ export default function Dashboard({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  navBar:{
+  navBar: {
     backgroundColor: 'red',
   },
-  topBar:{
+  topBar: {
     height: 50,
-    width: '100%', 
+    width: '100%',
   },
 
-  translucent:{
+  translucent: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     display: 'flex',
     flexDirection: 'row',
@@ -177,7 +176,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
 
-  hamburger:{
+  hamburger: {
     backgroundColor: '#FFFFFF',
     width: '66%',
     maxWidth: 250,
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     zIndex: 3,
   },
-  image:{
+  image: {
     width: 30,
     height: 30,
   }

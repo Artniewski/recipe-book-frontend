@@ -9,6 +9,23 @@ import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import { Searchbar } from 'react-native-paper';
 
+const IconBack = (props) => (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <Path
+        fill="#000"
+        fillRule="evenodd"
+        d="M11.707 4.293a1 1 0 0 1 0 1.414L6.414 11H20a1 1 0 1 1 0 2H6.414l5.293 5.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z"
+        clipRule="evenodd"
+      />
+    </Svg>
+  )
+
+
 export default function SearchScreen({navigation}) {
     const [searchQuery, setSearchQuery] = React.useState('');
     const [timeoutId, setTimeoutId] = useState(null);
@@ -40,14 +57,12 @@ export default function SearchScreen({navigation}) {
 
     return (
         <View style={{height: '100%',  width: '100%'}}>
-            <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+            <StatusBar backgroundColor="#CBB18A"/>
             <View style={styles.container}>
                 <TouchableOpacity
                     onPress={() => navigation.goBack()}
                 >
-                    <Image 
-                        source={require('../assets/arrow_back@2x.png')}
-                        style={styles.image}
+                    <IconBack style={styles.image}
                     />
                 </TouchableOpacity>
                 <Searchbar
@@ -91,10 +106,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     image: {
-        width: 30,
-        height: 30,
         marginRight: 20,
         marginLeft: 15,
+        width: 30,
+        height: 30,
     },
     search: {
         flex : 1,

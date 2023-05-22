@@ -8,8 +8,6 @@ import { Svg, Path } from 'react-native-svg';
 const IconHamburger = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    width={33}
-    height={26}
     viewBox="0 0 33 26"
     fill="none"
     {...props}
@@ -27,8 +25,6 @@ const IconHamburger = (props) => (
 const IconSearch = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    width={19}
-    height={19}
     viewBox="0 0 19 19"
     fill="none"
     {...props}

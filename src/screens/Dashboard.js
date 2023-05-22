@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, StatusBar } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView , Dimensions, Image, StatusBar } from 'react-native'
 import {logoutUser} from '../api/auth-api'
 import Home from '../components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import UserRecpies from '../components/UserRecipies'
+import { AnimatedFAB } from 'react-native-paper'
 
 
 
@@ -79,9 +80,16 @@ const BookRoute = () => <UserRecpies />;
 
 const Tab = createBottomTabNavigator();
 
-export default function Dashboard({navigation}) {
+export default function Dashboard({navigation,
+  animatedValue,
+  visible,
+  extended,
+  label,
+  animateFrom,
+  style,
+  iconMode,}) {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleMenuPress = () => {
     console.log("pressed");
@@ -92,18 +100,32 @@ export default function Dashboard({navigation}) {
     console.log("search pressed");
     navigation.navigate('SearchScreen');
   };
+
+  const fabStyle = { [animateFrom]: 16 };
   
 
 
 
   return (
-    <View style={{height: '100%',  width: '100%'}}>
+    <SafeAreaView  style={{height: '100%',  width: '100%', flexGrow:1}}>
     <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
     <TopBar
         onHamburgerPressed={handleMenuPress}
         onSearchPressed={onSearchPressed}
 
         style={styles.topBar}
+    />
+    <AnimatedFAB
+    style={[styles.fab, style, fabStyle]}
+    icon="plus"
+    color='#ffffff'
+    onPress={() => setIsExpanded(!isExpanded)}
+    animateFrom={'right'}
+    iconMode={'static'}
+    extended={isExpanded}
+    label='Add Recipe'
+    labelStyle={styles.label}
+    visible={visible}
     />
 
 
@@ -152,7 +174,7 @@ export default function Dashboard({navigation}) {
       </TouchableOpacity>
 
       )}
-    </View>
+    </SafeAreaView >
 
   )
 }
@@ -174,7 +196,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: '100%',
     width: '100%',
-    zIndex: 2,
+    zIndex: 3,
   },
 
   hamburger:{
@@ -184,11 +206,25 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
-    zIndex: 3,
+    zIndex: 4,
   },
   image:{
     width: 30,
     height: 30,
+  },
+  fab: {
+    position: 'absolute',
+    right: 16,
+    bottom: 66,
+    zIndex: 3,
+    backgroundColor: '#CBB18A',
+  },
+  label: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginHorizontal: 8,
+    zIndex: 3,
   }
 })
 

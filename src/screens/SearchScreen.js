@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, StatusBar } from 'react-native'
@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import { Searchbar } from 'react-native-paper';
+import Background from '../components/Background'
 
 const IconBack = (props) => (
     <Svg
@@ -55,6 +56,18 @@ export default function SearchScreen({navigation}) {
         setTimeoutId(newTimeoutId);
     };
 
+    const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
+
+    useLayoutEffect(() => {
+        function handleLayout() {
+        setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
+        }
+        Dimensions.addEventListener('change', handleLayout);
+        return () => {
+        Dimensions.removeEventListener('change', handleLayout);
+        };
+    }, []);
+
     return (
         <View style={{height: '100%',  width: '100%'}}>
             <StatusBar backgroundColor="#CBB18A"/>
@@ -73,23 +86,28 @@ export default function SearchScreen({navigation}) {
                 style={styles.search}
                 />
             </View>
+            <Background>
+
             <FlatList
-      style={styles.content}
-      data={recipes}
-      numColumns={Math.floor((Dimensions.get('window').width-10)/170)}
-      renderItem={({item}) => (
-        <RecipePreview
-          title={item.title}
-          image={item.image}
-          time={item.time}
-          likes={item.fav_count}
-          onPress={() => console.log('pressed'+item.id)}
-        />
-      )}
-      keyExtractor={item => item.id}
-      contentContainerStyle={styles.list}
-    >
-    </FlatList>
+            style={styles.content}
+            data={recipes}
+            numColumns={numColumns}
+            renderItem={({item}) => (
+                <RecipePreview
+                title={item.title}
+                image={item.image}
+                time={item.time}
+                likes={item.fav_count}
+                onPress={() => console.log('pressed'+item.id)}
+                />
+                )}
+                keyExtractor={item => item.id}
+                contentContainerStyle={styles.list}
+                key={numColumns}
+                >
+                
+            </FlatList>
+            </Background>
         </View>
     )
 }

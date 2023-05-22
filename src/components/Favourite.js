@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect} from 'react'
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native'
 import RecipePreview from '../components/RecipePreview'
 import { getAllRecipes } from '../api/recipe-api';
+import Background from './Background';
 
 export default function Favourite({navigation}) {
 
@@ -15,31 +16,45 @@ export default function Favourite({navigation}) {
     ))
   
 
-    
+    const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
 
+    useLayoutEffect(() => {
+      function handleLayout() {
+        setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
+      }
+      Dimensions.addEventListener('change', handleLayout);
+      return () => {
+        Dimensions.removeEventListener('change', handleLayout);
+      };
+    }, []);
+  
+  
+
+  
+  
     return (
-        <View style={{height: '100%',  width: '100%'}}>
-
-        <FlatList
+      <Background>
+  
+      <FlatList
         style={styles.content}
         data={recipes}
-        numColumns={Math.floor((Dimensions.get('window').width-10)/170)}
+        numColumns={numColumns}
         renderItem={({item}) => (
-            <RecipePreview
+          <RecipePreview
             title={item.title}
             image={item.image}
             time={item.time}
             likes={item.fav_count}
             onPress={() => navigation.navigate('RecipeDetailsScreen', {recipeData: item})}
-            />
+          />
         )}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
-        >
-        </FlatList>
-
-        
-        </View>
+        key = {numColumns}
+      >
+      </FlatList>
+  
+      </Background>
     )
 }
 
@@ -48,6 +63,7 @@ const styles = StyleSheet.create({
   list:{
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
   },
 
   content:{

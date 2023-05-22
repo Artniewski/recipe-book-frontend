@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-
 import RecipePreview from '../components/RecipePreview'
 import { getAllRecipes } from '../api/recipe-api';
 
-export default function Favourite() {
+export default function Favourite({navigation}) {
 
     const recipes = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => ({
         id: item,
@@ -30,7 +30,7 @@ export default function Favourite() {
             image={item.image}
             time={item.time}
             likes={item.fav_count}
-            onPress={() => console.log('pressed'+item.id)}
+            onPress={() => navigation.navigate('RecipeDetailsScreen', {recipeData: item})}
             />
         )}
         keyExtractor={item => item.id}

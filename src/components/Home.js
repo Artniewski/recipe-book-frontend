@@ -5,7 +5,7 @@ import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-
 import RecipePreview from '../components/RecipePreview'
 import { getAllRecipes } from '../api/recipe-api';
 
-export default function Home() {
+export default function Home({navigation}) {
   
 
   const [recipes, setRecipes] = useState([]);
@@ -35,7 +35,7 @@ export default function Home() {
           image={item.image}
           time={item.time}
           likes={item.fav_count}
-          onPress={() => console.log('pressed'+item.id)}
+          onPress={() => navigation.navigate('RecipeDetailsScreen', {recipeData: item})}
         />
       )}
       keyExtractor={item => item.id}

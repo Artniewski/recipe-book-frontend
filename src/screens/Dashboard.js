@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import UserRecpies from '../components/UserRecipies'
-import { AnimatedFAB } from 'react-native-paper'
+import { FAB } from 'react-native-paper'
 
 
 
@@ -74,9 +74,7 @@ const IconUser = (props) => (
 )
 
 
-const HomeRoute = () => <Home />;
-const FavRoute = () => <Favourite />;
-const BookRoute = () => <UserRecpies />;
+
 
 const Tab = createBottomTabNavigator();
 
@@ -104,7 +102,9 @@ export default function Dashboard({navigation,
   const fabStyle = { [animateFrom]: 16 };
   
 
-
+  const HomeRoute = () => <Home navigation={navigation}/>;
+  const FavRoute = () => <Favourite navigation={navigation}/>;
+  const BookRoute = () => <UserRecpies navigation={navigation}/>;
 
   return (
     <SafeAreaView  style={{height: '100%',  width: '100%', flexGrow:1}}>
@@ -115,16 +115,11 @@ export default function Dashboard({navigation,
 
         style={styles.topBar}
     />
-    <AnimatedFAB
+    <FAB
     style={[styles.fab, style, fabStyle]}
     icon="plus"
     color='#ffffff'
-    onPress={() => setIsExpanded(!isExpanded)}
-    animateFrom={'right'}
-    iconMode={'static'}
-    extended={isExpanded}
-    label='Add Recipe'
-    labelStyle={styles.label}
+    onPress={() => navigation.navigate('RecipeForm')}
     visible={visible}
     />
 

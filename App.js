@@ -16,7 +16,6 @@ import {
   RecipeList,
   RecipeDetailsScreen,
   SearchScreen,
-  RecipeDetailsScreen
 } from './src/screens'
 
 const Stack = createNativeStackNavigator();

@@ -14,6 +14,7 @@ import {
   Dashboard,
   RecipeForm,
   RecipeList,
+  RecipeDetailsScreen,
   SearchScreen,
 } from './src/screens'
 
@@ -40,6 +41,7 @@ export default function App() {
           <Stack.Screen name="RecipeForm" component={RecipeForm} />
           <Stack.Screen name="RecipeList" component={RecipeList} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="RecipeDetailsScreen" component={RecipeDetailsScreen} />
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}

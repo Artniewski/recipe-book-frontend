@@ -60,10 +60,14 @@ export default function RecipePreview(props) {
                     <Text style={styles.topRowText}>{props.title}</Text>
                 </View>
                 <View style={styles.bottomRow}>
+                    <View style={styles.bottomRowItem}>
                     <IconTime style={styles.icon}/>
-                    <Text>{props.time}</Text>
+                    <Text style={{marginLeft:5}}>{props.time}</Text>
+                    </View>
+                    <View style={styles.bottomRowItem}>
                     <IconHeart style={styles.icon}/>
-                    <Text>{props.likes}</Text>
+                    <Text style={{marginLeft:5}}>{props.likes}</Text>
+                    </View>
                 </View>
             </View>
         </TouchableOpacity>
@@ -114,5 +118,9 @@ bottomRow:{
 icon: {
     width: 15,
     height: 15,
+},
+bottomRowItem:{
+    display: 'flex',
+    flexDirection: 'row',
 }
 })

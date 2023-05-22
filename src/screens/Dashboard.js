@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import UserRecpies from '../components/UserRecipies'
-import { AnimatedFAB } from 'react-native-paper'
+import { FAB } from 'react-native-paper'
 
 
 const IconGlobe = (props) => (
@@ -110,64 +110,59 @@ export default function Dashboard({ navigation,
         onSearchPressed={onSearchPressed}
 
         style={styles.topBar}
-      />
-      <AnimatedFAB
-        style={[styles.fab, style, fabStyle]}
-        icon="plus"
-        color='#ffffff'
-        onPress={() => setIsExpanded(!isExpanded)}
-        animateFrom={'right'}
-        iconMode={'static'}
-        extended={isExpanded}
-        label='Add Recipe'
-        labelStyle={styles.label}
-        visible={visible}
-      />
+    />
+    <FAB
+    style={[styles.fab, style, fabStyle]}
+    icon="plus"
+    color='#ffffff'
+    onPress={() => navigation.navigate('RecipeForm')}
+    visible={visible}
+    />
 
 
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarActiveBackgroundColor: '#CBB18A',
-          tabBarInactiveBackgroundColor: '#CBB18A',
-        })}
-        initialRouteName='Home'
-        barStyle={{ height: 75 }}
-      >
-        <Tab.Screen
-          name="Favourite"
-          component={FavRoute}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <IconHeart style={styles.image} color={focused ? 'white' : 'black'} />
-            ),
-            tabBarLabel: ''
-          }} />
-        <Tab.Screen name="Home" component={HomeRoute}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <IconGlobe style={styles.image} color={focused ? 'white' : 'black'} />
-            ),
-            tabBarLabel: ''
-          }} />
-        <Tab.Screen name="Book" component={BookRoute}
-          options={{
-            tabBarIcon: ({ focused, color, size }) => (
-              <IconUser style={styles.image} color={focused ? 'white' : 'black'} />
-            ),
-            tabBarLabel: ''
-          }} />
-      </Tab.Navigator>
+    <Tab.Navigator
+    screenOptions={({ route }) => ({ 
+      headerShown: false,
+      tabBarActiveBackgroundColor: '#CBB18A',
+      tabBarInactiveBackgroundColor: '#CBB18A',
+    })}
+    initialRouteName='Home'
+    barStyle={{height:75}}
+    >
+      <Tab.Screen 
+      name="Favourite" 
+      component={FavRoute}
+      options={{
+        tabBarIcon: ({ focused, color, size }) => (
+          <IconHeart style={styles.image} color={focused?'white':'black'}/>
+        ),
+        tabBarLabel: ''
+      }} />
+      <Tab.Screen name="Home" component={HomeRoute}
+      options={{
+        tabBarIcon: ({ focused, color, size }) => (
+          <IconGlobe style={styles.image} color={focused?'white':'black'}/>
+        ),
+        tabBarLabel: ''
+      }} />
+      <Tab.Screen name="Book" component={BookRoute} 
+      options={{
+        tabBarIcon: ({ focused, color, size }) => (
+          <IconUser style={styles.image} color={focused?'white':'black'}/>
+        ),
+        tabBarLabel: ''
+      }}/>
+    </Tab.Navigator>
 
 
-      {menuOpen && (
-        <TouchableOpacity style={styles.translucent} onPress={handleMenuPress}>
-          <View style={styles.hamburger}>
-            <Button mode="text" onPress={logoutUser}>
-              Logout
-            </Button>
-          </View>
-        </TouchableOpacity>
+    {menuOpen && (
+      <TouchableOpacity style={styles.translucent} onPress={handleMenuPress}>
+        <View style={styles.hamburger}>
+        <Button mode="text" onPress={logoutUser}>
+          Logout
+        </Button>
+      </View>
+      </TouchableOpacity>
 
       )}
     </SafeAreaView >

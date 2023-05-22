@@ -46,7 +46,6 @@ export default function App() {
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}
           />
-          <Stack.Screen name="RecipeDetailsScreen" component={RecipeDetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

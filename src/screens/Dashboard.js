@@ -1,15 +1,14 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
-import { View, StyleSheet, TouchableOpacity, SafeAreaView , Dimensions, Image, StatusBar } from 'react-native'
-import {logoutUser} from '../api/auth-api'
+import { View, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Image, StatusBar } from 'react-native'
+import { logoutUser } from '../api/auth-api'
 import Home from '../components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import UserRecpies from '../components/UserRecipies'
 import { FAB } from 'react-native-paper'
-
 
 
 const IconGlobe = (props) => (
@@ -74,18 +73,16 @@ const IconUser = (props) => (
 )
 
 
-
-
 const Tab = createBottomTabNavigator();
 
-export default function Dashboard({navigation,
+export default function Dashboard({ navigation,
   animatedValue,
   visible,
   extended,
   label,
   animateFrom,
   style,
-  iconMode,}) {
+  iconMode, }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -100,16 +97,15 @@ export default function Dashboard({navigation,
   };
 
   const fabStyle = { [animateFrom]: 16 };
-  
 
-  const HomeRoute = () => <Home navigation={navigation}/>;
-  const FavRoute = () => <Favourite navigation={navigation}/>;
-  const BookRoute = () => <UserRecpies navigation={navigation}/>;
+  const HomeRoute = () => <Home navigation={navigation} />;
+  const FavRoute = () => <Favourite navigation={navigation} />;
+  const BookRoute = () => <UserRecpies navigation={navigation} />;
 
   return (
-    <SafeAreaView  style={{height: '100%',  width: '100%', flexGrow:1}}>
-    <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
-    <TopBar
+    <SafeAreaView style={{ height: '100%', width: '100%', flexGrow: 1 }}>
+      <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
+      <TopBar
         onHamburgerPressed={handleMenuPress}
         onSearchPressed={onSearchPressed}
 
@@ -175,15 +171,15 @@ export default function Dashboard({navigation,
 }
 
 const styles = StyleSheet.create({
-  navBar:{
+  navBar: {
     backgroundColor: 'red',
   },
-  topBar:{
+  topBar: {
     height: 50,
-    width: '100%', 
+    width: '100%',
   },
 
-  translucent:{
+  translucent: {
     backgroundColor: 'rgba(0,0,0,0.5)',
     display: 'flex',
     flexDirection: 'row',
@@ -194,7 +190,7 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
 
-  hamburger:{
+  hamburger: {
     backgroundColor: '#FFFFFF',
     width: '66%',
     maxWidth: 250,
@@ -203,7 +199,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     zIndex: 4,
   },
-  image:{
+  image: {
     width: 30,
     height: 30,
   },

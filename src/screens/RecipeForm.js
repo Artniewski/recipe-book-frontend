@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import { Text } from 'react-native-paper';
+import { StyleSheet, View, ScrollView, Image } from 'react-native';
+import { Text, Button as PaperButton } from 'react-native-paper';
 import Background from '../components/Background';
 import Header from '../components/Header';
 import TextInput from '../components/TextInput';
@@ -32,25 +32,34 @@ export default function AddRecipeScreen({ navigation }) {
     })();
   }, []);
 
-  const addIngredient = () => {
+  const handleAddIngredient = () => {
     setIngredients([...ingredients, { name: '', quantity: '', unit: '' }]);
   };
 
-  const updateIngredient = (index, field, value) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index][field] = value;
-    setIngredients(newIngredients);
+  const handleRemoveIngredient = (index) => {
+    setIngredients(ingredients.filter((_, i) => i !== index));
   };
 
-  const addInstruction = () => {
+  const handleAddInstruction = () => {
     setInstructions([...instructions, '']);
   };
 
-  const updateInstruction = (index, value) => {
+  const handleRemoveInstruction = (index) => {
+    setInstructions(instructions.filter((_, i) => i !== index));
+  };
+
+  const handleIngredientChange = (index, field, text) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index][field] = text;
+    setIngredients(newIngredients);
+  };
+
+  const handleInstructionChange = (index, text) => {
     const newInstructions = [...instructions];
-    newInstructions[index] = value;
+    newInstructions[index] = text;
     setInstructions(newInstructions);
   };
+
   const selectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -58,8 +67,6 @@ export default function AddRecipeScreen({ navigation }) {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.uri);
@@ -69,10 +76,10 @@ export default function AddRecipeScreen({ navigation }) {
   const onAddRecipePressed = async () => {
     setLoading(true)
     const response = await addRecipe({
-      title: title.value,
-      time: time.value,
-      ingredients: ingredients.value,
-      instructions: instructions.value,
+      title: title,
+      time: time,
+      ingredients: ingredients,
+      instructions: instructions,
       image: image,
     });
     if (response.error) {
@@ -108,34 +115,56 @@ export default function AddRecipeScreen({ navigation }) {
       {ingredients.map((ingredient, index) => (
         <View key={index} style={styles.ingredientContainer}>
           <TextInput
+            containerStyle={styles.ingredientInputContainer}
+            inputStyle={styles.ingredientInputName}
             value={ingredient.name}
-            onChangeText={value => updateIngredient(index, 'name', value)}
+            onChangeText={text => handleIngredientChange(index, 'name', text)}
             placeholder="Ingredient name"
           />
           <TextInput
+            containerStyle={styles.ingredientInputContainer}
+            inputStyle={styles.ingredientInputQuantity}
             value={ingredient.quantity}
-            onChangeText={value => updateIngredient(index, 'quantity', value)}
+            onChangeText={text => handleIngredientChange(index, 'quantity', text)}
             placeholder="Quantity"
           />
           <TextInput
+            containerStyle={styles.ingredientInputContainer}
+            inputStyle={styles.ingredientInputUnit}
             value={ingredient.unit}
-            onChangeText={value => updateIngredient(index, 'unit', value)}
+            onChangeText={text => handleIngredientChange(index, 'unit', text)}
             placeholder="Unit"
           />
+          {ingredients.length > 1 && (
+            <View style={styles.buttonContainer}><PaperButton icon="minus" onPress={() => handleRemoveIngredient(index)} />
+            </View>)}
+          {index === ingredients.length - 1 && (
+            <View style={styles.buttonContainer}> <PaperButton icon="plus" onPress={handleAddIngredient} />
+            </View>)}
         </View>
       ))}
-      <Button title="Add Ingredient" onPress={addIngredient} />
 
       <Text>Instructions:</Text>
       {instructions.map((instruction, index) => (
-        <TextInput
-          key={index}
-          value={instruction}
-          onChangeText={value => updateInstruction(index, value)}
-          placeholder={`Instruction ${index + 1}`}
-        />
+        <View key={index} style={styles.instructionContainer}>
+          <TextInput
+            inputStyle={styles.instructionInput}
+            value={instruction}
+            onChangeText={text => handleInstructionChange(index, text)}
+            placeholder={`Instruction ${index + 1}`}
+          />
+
+          {instructions.length > 1 && (
+            <View style={styles.buttonContainer}>
+              <PaperButton icon="minus" onPress={() => handleRemoveInstruction(index)} />
+            </View>
+          )}
+          {index === instructions.length - 1 && (
+            <View style={styles.buttonContainer}>
+              <PaperButton icon="plus" onPress={handleAddInstruction} />
+            </View>)}
+        </View>
       ))}
-      <Button title="Add Instruction" onPress={addInstruction} />
 
       <Button onPress={selectImage}>
         Select Image
@@ -150,13 +179,49 @@ export default function AddRecipeScreen({ navigation }) {
   );
 };
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
   ingredientContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginBottom: 10,
   },
+  ingredientInputContainer: {
+    flexGrow: 1,
+    flexBasis: '30%',
+    marginBottom: 10,
+  },
+  ingredientInputName: {
+    flexGrow: 2,
+    flexBasis: '40%',
+    backgroundColor: theme.colors.surface,
+    marginRight: 10,
+  },
+  ingredientInputQuantity: {
+    flexGrow: 1,
+    flexBasis: '15%',
+    backgroundColor: theme.colors.surface,
+    marginRight: 10,
+  },
+  ingredientInputUnit: {
+    flexGrow: 1,
+    flexBasis: '15%',
+    backgroundColor: theme.colors.surface,
+  },
+  instructionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    width: 40,
+  },
+  instructionInput: {
+    flex: 1,
+  }
+
 });

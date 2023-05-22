@@ -3,10 +3,12 @@ import TopBar from '../components/TopBar'
 import Button from '../components/Button'
 import { View, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions, Image, StatusBar } from 'react-native'
 import { logoutUser } from '../api/auth-api'
+import Home from '../components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
+import UserRecpies from '../components/UserRecipies'
 import { AnimatedFAB } from 'react-native-paper'
-
 
 
 const IconGlobe = (props) => (
@@ -96,8 +98,9 @@ export default function Dashboard({ navigation,
 
   const fabStyle = { [animateFrom]: 16 };
 
-
-
+  const HomeRoute = () => <Home navigation={navigation} />;
+  const FavRoute = () => <Favourite navigation={navigation} />;
+  const BookRoute = () => <UserRecpies navigation={navigation} />;
 
   return (
     <SafeAreaView style={{ height: '100%', width: '100%', flexGrow: 1 }}>

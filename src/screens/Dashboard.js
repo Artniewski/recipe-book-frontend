@@ -7,6 +7,7 @@ import Home from '../components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
+import UserRecpies from '../components/UserRecipies'
 
 
 
@@ -74,17 +75,22 @@ const IconUser = (props) => (
 
 const HomeRoute = () => <Home />;
 const FavRoute = () => <Favourite />;
-const BookRoute = () => <Home />;
+const BookRoute = () => <UserRecpies />;
 
 const Tab = createBottomTabNavigator();
 
-export default function Dashboard() {
+export default function Dashboard({navigation}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
 
   const handleMenuPress = () => {
     console.log("pressed");
     setMenuOpen(!menuOpen);
+  };
+
+  const onSearchPressed = () => {
+    console.log("search pressed");
+    navigation.navigate('SearchScreen');
   };
   
 
@@ -95,6 +101,8 @@ export default function Dashboard() {
     <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
     <TopBar
         onHamburgerPressed={handleMenuPress}
+        onSearchPressed={onSearchPressed}
+
         style={styles.topBar}
     />
 
@@ -142,7 +150,7 @@ export default function Dashboard() {
         </Button>
       </View>
       </TouchableOpacity>
-      
+
       )}
     </View>
 

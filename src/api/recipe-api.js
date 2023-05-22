@@ -1,5 +1,6 @@
 import { auth, db, storage } from '../core/firebase';
 import { doc, setDoc, deleteDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 const recipeCollection = collection(db, "recipes");
 
@@ -25,24 +26,6 @@ export const getAllRecipes = async () => {
     return recipes;
 }
 
-export const addRecipe = async (recipe) => {
-    const userId = auth.currentUser.uid;
-    // Build the recipe object
-    const recipeData = {
-        title: recipe.title,
-        time: recipe.time,
-        ingredients: recipe.ingredients,
-        instructions: recipe.instructions,
-        user: userId,
-        fav_count: 0,
-        image: recipe.imageUrl || "https://source.unsplash.com/user/wsanter", //mock image
-    };
-
-    // Save the recipe to Firestore
-    await setDoc(doc(recipeCollection), recipeData);
-
-}
-
 export const editRecipe = async (recipeId, updatedData) => {
     const recipeRef = doc(db, "recipes", recipeId);
 
@@ -55,43 +38,55 @@ export const deleteRecipe = async (recipeId) => {
     await deleteDoc(recipeRef);
 }
 
-// export const addRecipe = async (recipe) => {
-//     const userId = auth.currentUser.uid;
-//     const imageFile = recipe.image;
+export const addRecipe = async (recipe) => {
+    const userId = auth.currentUser.uid;
+    const imageUri = recipe.image;
 
-//     // Upload the image and get its URL
-//     const imageRef = ref(storage, 'images/' + imageFile.name);
-//     const uploadTask = uploadBytesResumable(imageRef, imageFile);
+    // Fetch the image file
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
 
-//     return new Promise((resolve, reject) => {
-//         uploadTask.on('state_changed',
-//             (snapshot) => {
-//                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-//                 console.log('Upload is ' + progress + '% done');
-//             },
-//             (error) => {
-//                 console.log(error);
-//                 reject(error);
-//             },
-//             async () => {
-//                 const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+    // Generate a random file name
+    const fileName = Math.floor(Math.random() * 1000000);
 
-//                 // Build the recipe object
-//                 const recipeData = {
-//                     title: recipe.title,
-//                     time: recipe.time,
-//                     ingredients: recipe.ingredients,
-//                     instructions: recipe.instructions,
-//                     user: userId,
-//                     fav_count: 0,
-//                     image: downloadURL,
-//                 };
+    // Upload the image and get its URL
+    const imageRef = ref(storage, 'images/' + fileName);
+    const uploadTask = uploadBytesResumable(imageRef, blob);
 
-//                 // Save the recipe to Firestore
-//                 await setDoc(doc(recipeCollection), recipeData);
+    return new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+                console.log(error);
+                reject(error);
+            },
+            async () => {
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-//                 resolve(recipeData);
-//             }
-//         );
-//     });
-// }
+                // Build the recipe object
+                const recipeData = {
+                    title: recipe.title,
+                    time: recipe.time,
+                    ingredients: recipe.ingredients.map(ingredient => ({
+                        name: ingredient.name,
+                        quantity: ingredient.quantity,
+                        unit: ingredient.unit
+                    })),
+                    instructions: recipe.instructions,
+                    user: userId,
+                    fav_count: 0,
+                    image: downloadURL,
+                };
+
+                // Save the recipe to Firestore
+                await setDoc(doc(recipeCollection), recipeData);
+
+                resolve(recipeData);
+            }
+        );
+    });
+}
+

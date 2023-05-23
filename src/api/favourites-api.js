@@ -1,5 +1,5 @@
 import { auth, db } from '../core/firebase';
-import { doc, collection, query, where, getDocs, increment, arrayUnion, arrayRemove, runTransaction } from "firebase/firestore";
+import { doc, collection, query, where, getDocs, increment, arrayUnion, arrayRemove, runTransaction, getDoc } from "firebase/firestore";
 
 
 export const addRecipeToFavorites = async (recipeId) => {
@@ -39,7 +39,7 @@ export const removeRecipeFromFavorites = async (recipeId) => {
 export const getUserFavoriteRecipes = async () => {
     const userId = auth.currentUser.uid;
     const userFavoritesRef = doc(db, "favorites", userId);
-    const userFavoritesDoc = await getDocs(userFavoritesRef);
+    const userFavoritesDoc = await getDoc(userFavoritesRef);
     if (userFavoritesDoc.exists()) {
         const favoriteRecipeIds = userFavoritesDoc.data().favorites;
         const recipeCollection = collection(db, "recipes");
@@ -58,7 +58,7 @@ export const getUserFavoriteRecipes = async () => {
 export const getUserFavoriteRecipeIds = async () => {
     const userId = auth.currentUser.uid;
     const userFavoritesRef = doc(db, "favorites", userId);
-    const userFavoritesDoc = await getDocs(userFavoritesRef);
+    const userFavoritesDoc = await getDoc(userFavoritesRef);
     if (userFavoritesDoc.exists()) {
         return new Set(userFavoritesDoc.data().favorites);
     } else {

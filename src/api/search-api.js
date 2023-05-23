@@ -87,3 +87,9 @@ const searchRecipes = async (searchFields) => {
 
     return recipes;
 }
+
+export const search = async (searchString) => {
+    const searchFields = parseSearchString(searchString);
+    const recipes = await searchRecipes(searchFields);
+    return recipes;
+}

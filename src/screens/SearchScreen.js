@@ -11,7 +11,7 @@ import { Searchbar } from 'react-native-paper';
 import Background from '../components/Background'
 import { getAllRecipes } from '../api/recipe-api';
 import RecipePreview from '../components/RecipePreview'
-import { searchRecipes } from '../api/search-api'
+import { search } from '../api/search-api'
 
 const IconBack = (props) => (
     <Svg
@@ -41,7 +41,7 @@ export default function SearchScreen({navigation}) {
     const fetchData = async (query) => {
         if(query && query.length > 0){
             console.log('Fetching data for:', query);
-            const recipeList = await searchRecipes(query);
+            const recipeList = await search(query);
             console.log(recipeList);
             setRecipes(recipeList);
 

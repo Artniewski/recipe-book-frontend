@@ -9,6 +9,9 @@ import Favourite from '../components/Favourite'
 import { Svg, Path } from 'react-native-svg';
 import { Searchbar } from 'react-native-paper';
 import Background from '../components/Background'
+import { getAllRecipes } from '../api/recipe-api';
+import RecipePreview from '../components/RecipePreview'
+import { searchRecipes } from '../api/search-api'
 
 const IconBack = (props) => (
     <Svg
@@ -28,17 +31,25 @@ const IconBack = (props) => (
 
 
 export default function SearchScreen({navigation}) {
-    const [searchQuery, setSearchQuery] = React.useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
 
-    const recipes = []
+    const [recipes, setRecipes] = useState([]);
 
 
-    const fetchData = (query) => {
-        if(query.length > 0){
+
+    const fetchData = async (query) => {
+        if(query && query.length > 0){
             console.log('Fetching data for:', query);
+            const recipeList = await searchRecipes(query);
+            console.log(recipeList);
+            setRecipes(recipeList);
+
         }else{
-            console.log('Fetching all data');
+            console.log('Fetching recipes...');
+            const recipeList = await getAllRecipes();
+            console.log(recipeList);
+            setRecipes(recipeList);
         }
     };
 
@@ -55,6 +66,11 @@ export default function SearchScreen({navigation}) {
 
         setTimeoutId(newTimeoutId);
     };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
 
     const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
 

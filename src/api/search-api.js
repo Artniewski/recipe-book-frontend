@@ -1,66 +1,60 @@
+import { collection, query, getDocs, where } from "firebase/firestore";
+import { db } from '../core/firebase';
+
 const searchRecipes = async (searchFields) => {
-    const db = firebase.firestore();
-    const recipeRef = db.collection("recipes");
+    const recipeRef = collection(db, "recipes");
     let hasQuery = false;
-    let query = recipeRef;
+    let queries = [];
 
     // Search by title
     if (searchFields.title) {
-        query = query.where("title", ">=", searchFields.title)
-            .where("title", "<=", searchFields.title + "\uf8ff");
+        queries.push(where("title", ">=", searchFields.title), where("title", "<=", searchFields.title + "\uf8ff"));
         hasQuery = true;
     }
 
     // Search by author
     if (searchFields.author) {
-        query = query.where("userName", ">=", searchFields.author)
-            .where("userName", "<=", searchFields.author + "\uf8ff");
+        queries.push(where("userName", ">=", searchFields.author), where("userName", "<=", searchFields.author + "\uf8ff"));
         hasQuery = true;
     }
 
     // Search by time
     if (searchFields.time) {
-        query = query.where("time", "<=", searchFields.time);
+        queries.push(where("time", "<=", searchFields.time));
         hasQuery = true;
     }
 
-    // If there are no query fields and no ingredients, return an empty array
-    if (!hasQuery && searchFields.ingredients.length === 0) {
+    // Search by first ingredient
+    if (searchFields.ingredients.length > 0) {
+        queries.push(where("ingredients", "array-contains", searchFields.ingredients[0]));
+        hasQuery = true;
+    }
+
+    if (!hasQuery) {
         return [];
     }
 
-    // If there are ingredients, add the first one to the query
-    if (searchFields.ingredients.length > 0) {
-        query = query.where("ingredients", "array-contains", searchFields.ingredients[0]);
-        hasQuery = true;
+    const recipesQuery = query(recipeRef, ...queries);
+    const querySnapshot = await getDocs(recipesQuery);
+    
+    if (querySnapshot.empty) {
+        console.log('No matching documents.');
+        return [];
     }
 
-    // If a query has been built, execute it
-    if (hasQuery) {
-        const snapshot = await query.get();
+    let recipes = [];
+    querySnapshot.forEach((doc) => {
+        recipes.push({ ...doc.data(), id: doc.id });
+    });
 
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return [];
-        }
-
-        // If there are additional ingredients, filter the results in JavaScript
-        if (searchFields.ingredients.length > 1) {
-            let recipes = snapshot.docs.map(doc => doc.data());
-
-            recipes = recipes.filter(recipe => {
-                for (let i = 1; i < searchFields.ingredients.length; i++) {
-                    if (!recipe.ingredients.includes(searchFields.ingredients[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            });
-
-            return recipes;
-        } else {
-            // If there's only one ingredient, return the query results
-            return snapshot.docs.map(doc => doc.data());
-        }
+    // If there are more than one ingredients, filter recipes in JavaScript
+    if (searchFields.ingredients.length > 1) {
+        recipes = recipes.filter(recipe =>
+            searchFields.ingredients.slice(1).every(ingredient =>
+                recipe.ingredients.includes(ingredient)
+            )
+        );
     }
+
+    return recipes;
 }

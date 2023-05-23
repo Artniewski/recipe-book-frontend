@@ -3,17 +3,16 @@ import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Platform, Tex
 import RecipePreview from '../components/RecipePreview'
 import { getAllRecipes } from '../api/recipe-api';
 import Background from './Background';
+import { getUserFavoriteRecipes } from '../api/favourites-api';
 
 export default function Favourite({navigation}) {
 
-    const recipes = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(item => ({
-        id: item,
-        title: 'Recipe '+item.toString(),
-        image: 'https://picsum.photos/300/200',
-        time: '30 min',
-        fav_count: 10,
-      }
-    ))
+  const [recipes, setRecipes] = useState([]);
+
+  const fetchRecipes = async () => {
+      const recipeList = await getUserFavoriteRecipes();
+      setRecipes(recipeList);
+  };
   
 
     const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
@@ -31,7 +30,10 @@ export default function Favourite({navigation}) {
     }
   
   
-
+    useEffect(() => {
+      console.log('Fetching recipes...');
+      fetchRecipes();
+  }, []);
   
   
     return (

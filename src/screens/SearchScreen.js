@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect, useRef} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
 import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, StatusBar, Platform } from 'react-native'
@@ -33,7 +33,7 @@ const IconBack = (props) => (
 export default function SearchScreen({navigation}) {
     const [searchQuery, setSearchQuery] = useState('');
     const [timeoutId, setTimeoutId] = useState(null);
-
+    const searchbarRef = useRef(null);
     const [recipes, setRecipes] = useState([]);
 
 
@@ -69,6 +69,7 @@ export default function SearchScreen({navigation}) {
 
     useEffect(() => {
         fetchData();
+        searchbarRef.current.focus();
     }, []);
 
 
@@ -102,6 +103,7 @@ export default function SearchScreen({navigation}) {
                 onEndEditing={() => console.log('searched')}
                 value={searchQuery}
                 style={styles.search}
+                ref={searchbarRef}
                 />
             </View>
             <Background>

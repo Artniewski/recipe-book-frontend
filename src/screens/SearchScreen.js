@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, StatusBar } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Image, StatusBar, Platform } from 'react-native'
 import {logoutUser} from '../api/auth-api'
 import Home from '../components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -58,15 +58,17 @@ export default function SearchScreen({navigation}) {
 
     const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
 
-    useLayoutEffect(() => {
-        function handleLayout() {
-        setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
-        }
-        Dimensions.addEventListener('change', handleLayout);
-        return () => {
-        Dimensions.removeEventListener('change', handleLayout);
-        };
-    }, []);
+    if(Platform.OS === 'web'){
+        useLayoutEffect(() => {
+          function handleLayout() {
+            setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
+          }
+          Dimensions.addEventListener('change', handleLayout);
+          return () => {
+            Dimensions.removeEventListener('change', handleLayout);
+          };
+        }, []);
+      }
 
     return (
         <View style={{height: '100%',  width: '100%'}}>

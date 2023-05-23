@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Platform, Text } from 'react-native'
 import RecipePreview from '../components/RecipePreview'
 import { getAllRecipes } from '../api/recipe-api';
 import Background from './Background'
@@ -13,35 +13,38 @@ export default function Home({navigation}) {
 
   const fetchRecipes = async () => {
       const recipeList = await getAllRecipes();
-      console.log(recipeList);
       setRecipes(recipeList);
   };
-
   const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
+  
+  if(Platform.OS === 'web'){
+    useLayoutEffect(() => {
+      function handleLayout() {
+        setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
+      }
+      Dimensions.addEventListener('change', handleLayout);
+      return () => {
+        Dimensions.removeEventListener('change', handleLayout);
+      };
+    }, []);
+  }
 
-  useLayoutEffect(() => {
-    function handleLayout() {
-      setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
-    }
-    Dimensions.addEventListener('change', handleLayout);
-    return () => {
-      Dimensions.removeEventListener('change', handleLayout);
-    };
-  }, []);
 
 
 
   useEffect(() => {
+      console.log('Fetching recipes...');
       fetchRecipes();
   }, []);
 
 
   return (
     <Background>
+      {recipes.length == 0 && <View style={{display: 'flex', alignContent: 'space-around'}}><Text>Loading...</Text></View>}
 
-    <FlatList
+    {recipes.length > 0 &&<FlatList
       style={styles.content}
-      data={recipes}
+      data={recipes}                                                                              
       numColumns={numColumns}
       renderItem={({item}) => (
         <RecipePreview
@@ -56,7 +59,7 @@ export default function Home({navigation}) {
       contentContainerStyle={styles.list}
       key = {numColumns}
     >
-    </FlatList>
+    </FlatList>}
 
     </Background>
   )

@@ -125,6 +125,8 @@ export default function Dashboard({ navigation,
       headerShown: false,
       tabBarActiveBackgroundColor: '#CBB18A',
       tabBarInactiveBackgroundColor: '#CBB18A',
+      tabBarActiveTintColor: 'white',
+      tabBarInactiveTintColor: 'black',
     })}
     initialRouteName='Home'
     barStyle={{height:75}}
@@ -134,21 +136,21 @@ export default function Dashboard({ navigation,
       component={FavRoute}
       options={{
         tabBarIcon: ({ focused, color, size }) => (
-          <IconHeart style={styles.image} color={focused?'white':'black'}/>
+          <IconHeart style={styles.image} color={color}/>
         ),
         tabBarLabel: ''
       }} />
       <Tab.Screen name="Home" component={HomeRoute}
       options={{
         tabBarIcon: ({ focused, color, size }) => (
-          <IconGlobe style={styles.image} color={focused?'white':'black'}/>
+          <IconGlobe style={styles.image} color={color}/>
         ),
         tabBarLabel: ''
       }} />
       <Tab.Screen name="Book" component={BookRoute} 
       options={{
         tabBarIcon: ({ focused, color, size }) => (
-          <IconUser style={styles.image} color={focused?'white':'black'}/>
+          <IconUser style={styles.image} color={color}/>
         ),
         tabBarLabel: ''
       }}/>

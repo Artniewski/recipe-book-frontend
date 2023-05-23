@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react'
 import TopBar from '../components/TopBar'
 import Button from '../components/Button'
-import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, FlatList, Dimensions, Platform, Text } from 'react-native'
 import RecipePreview from '../components/RecipePreview'
 import { getAllRecipes, getRecipesByUser } from '../api/recipe-api';
 import Background from './Background'
@@ -25,15 +25,17 @@ export default function UserRecpies({navigation}) {
 
   const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
 
-  useLayoutEffect(() => {
-    function handleLayout() {
-      setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
-    }
-    Dimensions.addEventListener('change', handleLayout);
-    return () => {
-      Dimensions.removeEventListener('change', handleLayout);
-    };
-  }, []);
+  if(Platform.OS === 'web'){
+    useLayoutEffect(() => {
+      function handleLayout() {
+        setNumColumns(Math.floor((Dimensions.get('window').width-10)/170));
+      }
+      Dimensions.addEventListener('change', handleLayout);
+      return () => {
+        Dimensions.removeEventListener('change', handleLayout);
+      };
+    }, []);
+  }
 
 
 
@@ -44,10 +46,11 @@ export default function UserRecpies({navigation}) {
 
   return (
     <Background>
+      {recipes.length == 0 && <View style={{display: 'flex', alignContent: 'space-around'}}><Text>Loading...</Text></View>}
 
-    <FlatList
+    {recipes.length > 0 &&<FlatList
       style={styles.content}
-      data={recipes}
+      data={recipes}                                                                              
       numColumns={numColumns}
       renderItem={({item}) => (
         <RecipePreview
@@ -62,7 +65,7 @@ export default function UserRecpies({navigation}) {
       contentContainerStyle={styles.list}
       key = {numColumns}
     >
-    </FlatList>
+    </FlatList>}
 
     </Background>
   )

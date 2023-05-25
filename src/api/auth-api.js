@@ -9,6 +9,7 @@ export const signUpUser = async ({ name, email, password }) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(userCredential.user, { displayName: name });
+        
         return { user: userCredential.user };
     } catch (error) {
         return {

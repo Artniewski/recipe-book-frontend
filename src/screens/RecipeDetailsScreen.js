@@ -12,7 +12,6 @@ import {
 import Background from "../components/Background";
 // import Header from '../components/Header';
 import { Header } from "react-navigation";
-import BackButton from "../components/BackButton";
 import { FAB } from "react-native-paper";
 import { Dimensions } from "react-native";
 import TopHeader from "../components/TopHeader";
@@ -27,20 +26,25 @@ import {
 
 const RecipeDetailsScreen = ({ route, navigation }) => {
   const { recipeData } = route.params;
-  // console.log(recipeData);
+  console.log(recipeData);
   const [isLiked, setIsLiked] = useState(false);
   const likePressed = () => {
-    setIsLiked(!isLiked);
-    if (!isLiked) {
-      addRecipeToFavorites(recipeData.id);
-    } else {
-      removeRecipeFromFavorites(recipeData.id);
-    }
+    setIsLiked((prevIsLiked) => {
+      if (!prevIsLiked) {
+        addRecipeToFavorites(recipeData.id);
+      } else {
+        removeRecipeFromFavorites(recipeData.id);
+      }
+      return !prevIsLiked;
+    });
   };
-  useEffect(async () => {
-    let liked = await isRecipeFavorite(recipeData.id);
-    console.log(liked);
-    setIsLiked(liked);
+  useEffect(() => {
+    const checkRecipeFavorite = async () => {
+      let liked = await isRecipeFavorite(recipeData.id);
+      console.log(liked);
+      setIsLiked(liked);
+    };
+    checkRecipeFavorite();
   }, []);
   const window = Dimensions.get("window");
   return (

@@ -18,13 +18,18 @@ export const addRecipeToFavorites = async (recipeId) => {
   const recipeRef = doc(db, "recipes", recipeId);
 
   await runTransaction(db, async (transaction) => {
+    const userFavoritesSnapshot = await transaction.get(userFavoritesRef);
+    if (!userFavoritesSnapshot.exists()) {
+      transaction.set(userFavoritesRef, { favorites: [recipeId] });
+    } else {
+      // add recipeId to user's favorite recipes
+      transaction.update(userFavoritesRef, {
+        favorites: arrayUnion(recipeId),
+      });
+    }
     // increment fav_count field
     transaction.update(recipeRef, {
       fav_count: increment(1),
-    });
-    // add recipeId to user's favorite recipes
-    transaction.update(userFavoritesRef, {
-      favorites: arrayUnion(recipeId),
     });
   });
 };
@@ -35,14 +40,15 @@ export const removeRecipeFromFavorites = async (recipeId) => {
   const recipeRef = doc(db, "recipes", recipeId);
 
   await runTransaction(db, async (transaction) => {
-    // decrement fav_count field
-    transaction.update(recipeRef, {
-      fav_count: increment(-1),
-    });
-    // remove recipeId from user's favorite recipes
-    transaction.update(userFavoritesRef, {
-      favorites: arrayRemove(recipeId),
-    });
+    const userFavoritesSnapshot = await transaction.get(userFavoritesRef);
+    if (userFavoritesSnapshot.exists()) {
+      transaction.update(recipeRef, {
+        fav_count: increment(-1),
+      });
+      transaction.update(userFavoritesRef, {
+        favorites: arrayRemove(recipeId),
+      });
+    }
   });
 };
 

@@ -80,7 +80,7 @@ export const addRecipe = async (recipe) => {
         // Build the recipe object
         const recipeData = {
           title: recipe.title,
-          time: recipe.time,
+          time: Number(recipe.time),
           ingredients: recipe.ingredients.map((ingredient) => ({
             name: ingredient.name,
             quantity: ingredient.quantity,

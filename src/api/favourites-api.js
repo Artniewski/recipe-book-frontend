@@ -83,7 +83,7 @@ export const getUserFavoriteRecipeIds = async () => {
   } else {
     return new Set();
   }
-};
+}
 
 export const isRecipeFavorite = async (recipeId) => {
   let favouriteIds = await getUserFavoriteRecipeIds();

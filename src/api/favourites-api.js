@@ -10,7 +10,9 @@ import {
   arrayRemove,
   runTransaction,
   getDoc,
+  FieldPath,
 } from "firebase/firestore";
+import { firebase } from "../core/firebase";
 
 export const addRecipeToFavorites = async (recipeId) => {
   const userId = auth.currentUser.uid;
@@ -59,15 +61,20 @@ export const getUserFavoriteRecipes = async () => {
   if (userFavoritesDoc.exists()) {
     const favoriteRecipeIds = userFavoritesDoc.data().favorites;
     const recipeCollection = collection(db, "recipes");
-    const q = query(
-      recipeCollection,
-      where(firebase.firestore.FieldPath.documentId(), "in", favoriteRecipeIds)
-    );
-    const querySnapshot = await getDocs(q);
     const favoriteRecipes = [];
-    querySnapshot.forEach((doc) => {
-      favoriteRecipes.push(doc.data());
-    });
+
+    for (const recipeId of favoriteRecipeIds) {
+      const recipeRef = doc(recipeCollection, recipeId);
+      const recipeSnapshot = await getDoc(recipeRef);
+
+      if (recipeSnapshot.exists()) {
+        favoriteRecipes.push({
+          ...recipeSnapshot.data(),
+          id: recipeSnapshot.id,
+        });
+      }
+    }
+
     return favoriteRecipes;
   } else {
     return [];
@@ -83,7 +90,7 @@ export const getUserFavoriteRecipeIds = async () => {
   } else {
     return new Set();
   }
-}
+};
 
 export const isRecipeFavorite = async (recipeId) => {
   let favouriteIds = await getUserFavoriteRecipeIds();

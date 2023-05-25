@@ -1,7 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getAuth } from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 import {
   API_KEY,
   AUTH_DOMAIN,
@@ -10,8 +10,8 @@ import {
   STORAGE_BUCKET,
   MESSAGING_SENDER_ID,
   APP_ID,
-  MEASUREMENT_ID
-} from '@env';
+  MEASUREMENT_ID,
+} from "@env";
 
 const FIREBASE_CONFIG = {
   apiKey: API_KEY,
@@ -21,7 +21,7 @@ const FIREBASE_CONFIG = {
   storageBucket: STORAGE_BUCKET,
   messagingSenderId: MESSAGING_SENDER_ID,
   appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  measurementId: MEASUREMENT_ID,
 };
 
 const firebaseApp = initializeApp(FIREBASE_CONFIG);

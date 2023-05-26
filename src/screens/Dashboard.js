@@ -9,6 +9,7 @@ import {
   Dimensions,
   Image,
   StatusBar,
+  Text
 } from "react-native";
 import { logoutUser } from "../api/auth-api";
 import Home from "../components/Home";
@@ -118,6 +119,9 @@ export default function Dashboard({
         onSearchPressed={onSearchPressed}
         style={styles.topBar}
       />
+      <Button mode="contained" onPress={() => navigation.navigate("RecipeForm")}>
+        <Text>Add Recipe</Text>
+      </Button>
       <FAB
         style={[styles.fab, style, fabStyle]}
         icon="plus"
@@ -217,8 +221,8 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    right: 16,
-    bottom: 66,
+    right: 100,
+    bottom: 100,
     zIndex: 3,
     backgroundColor: "#CBB18A",
   },

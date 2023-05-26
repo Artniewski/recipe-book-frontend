@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ScrollView, Image, SafeAreaView, Dimensions } from 'react-native';
+import { StyleSheet, View, ScrollView, Image } from 'react-native';
 import { Text, Button as PaperButton } from 'react-native-paper';
 import Background from '../components/Background';
 import Header from '../components/Header';
@@ -10,16 +10,12 @@ import { theme } from '../core/theme';
 import { addRecipe } from '../api/recipe-api';
 import Toast from '../components/Toast';
 import * as ImagePicker from 'expo-image-picker';
-import TopHeader from "../components/TopHeader"
-
-
-const screenWidth = Dimensions.get('window').width;
 
 export default function AddRecipeScreen({ navigation }) {
   const [title, setTitle] = useState('');
   const [time, setTime] = useState('');
   const [ingredients, setIngredients] = useState([{ name: '', quantity: '', unit: '' }]);
-  const [instructions, setInstructions] = useState(['', '']);
+  const [instructions, setInstructions] = useState(['']);
 
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState();
@@ -93,41 +89,29 @@ export default function AddRecipeScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        height: "100%",
-        width: "100%",
-        flexGrow: 1,
-        backgroundColor: "#CBB18A",
-      }}
-    >
-      <ScrollView>
-      <TopHeader navigation={navigation} headerText={"Add new recipe"}/>
-        <View style={{ backgroundColor: "#FFFFFF"}}>
-        <Background>
-      { <TextInput
+    <Background>
+      <BackButton goBack={navigation.goBack} />
+      <Header navigation={navigation} headerText = "Create New Recipe"></Header>
+
+      <TextInput
         label="Title"
         returnKeyType="next"
         value={title}
         onChangeText={setTitle}
         error={!!title.error}
-        errorText={title.error && <Text>{title.error}</Text>}
-      />}
+        errorText={title.error}
+      />
 
-      { <TextInput
+      <TextInput
         label="Time"
         returnKeyType="next"
         value={time}
         onChangeText={setTime}
         error={!!time.error}
-        errorText={time.error && <Text>{time.error}</Text>}
-      />}
+        errorText={time.error}
+      />
 
-<View style={styles.container}>
-      <View style={styles.containerHeader}>
-        <Text style={styles.containerText}>Ingredients</Text>
-      </View>
-      <View style={{ marginTop: 10 }}>
+      <Text>Ingredients:</Text>
       {ingredients.map((ingredient, index) => (
         <View key={index} style={styles.ingredientContainer}>
           <TextInput
@@ -138,39 +122,29 @@ export default function AddRecipeScreen({ navigation }) {
             placeholder="Ingredient name"
           />
           <TextInput
-            containerStyle={styles.timeAndUnitInputContainer}
+            containerStyle={styles.ingredientInputContainer}
             inputStyle={styles.ingredientInputQuantity}
             value={ingredient.quantity}
             onChangeText={text => handleIngredientChange(index, 'quantity', text)}
-            placeholder="Qtty"
+            placeholder="Quantity"
           />
           <TextInput
-            containerStyle={styles.timeAndUnitInputContainer}
+            containerStyle={styles.ingredientInputContainer}
             inputStyle={styles.ingredientInputUnit}
             value={ingredient.unit}
             onChangeText={text => handleIngredientChange(index, 'unit', text)}
             placeholder="Unit"
           />
-
-{index === ingredients.length - 1 ? (
-            <View style={styles.buttonContainer}>
-              <PaperButton icon="plus" onPress={handleAddIngredient} />
-            </View>) : undefined}
-          {ingredients.length > 1 ? (
-            <View style={styles.buttonContainer}>
-              <PaperButton icon="minus" onPress={() => handleRemoveIngredient(index)} />
-            </View>
-          ) : undefined}
+          {ingredients.length > 1 && (
+            <View style={styles.buttonContainer}><PaperButton icon="minus" onPress={() => handleRemoveIngredient(index)} />
+            </View>)}
+          {index === ingredients.length - 1 && (
+            <View style={styles.buttonContainer}> <PaperButton icon="plus" onPress={handleAddIngredient} />
+            </View>)}
         </View>
       ))}
-      </View>
-    </View>
 
-    <View style={styles.container}>
-      <View style={styles.containerHeader}>
-        <Text style={styles.containerText}>Instructions</Text>
-      </View>
-      <View style={{ marginTop: 10 }}>
+      <Text>Instructions:</Text>
       {instructions.map((instruction, index) => (
         <View key={index} style={styles.instructionContainer}>
           <TextInput
@@ -180,35 +154,28 @@ export default function AddRecipeScreen({ navigation }) {
             placeholder={`Instruction ${index + 1}`}
           />
 
-          {index === instructions.length - 1 ? (
-            <View style={styles.buttonContainer}>
-              <PaperButton icon="plus" onPress={handleAddInstruction} />
-            </View>) : undefined}
-          {instructions.length > 1 ? (
+          {instructions.length > 1 && (
             <View style={styles.buttonContainer}>
               <PaperButton icon="minus" onPress={() => handleRemoveInstruction(index)} />
             </View>
-          ) : undefined}
+          )}
+          {index === instructions.length - 1 && (
+            <View style={styles.buttonContainer}>
+              <PaperButton icon="plus" onPress={handleAddInstruction} />
+            </View>)}
         </View>
       ))}
-      </View>
-    </View>
 
-      
-
-      <Button onPress={selectImage} mode="outlined">
-        <Text>Select Image</Text>
+      <Button onPress={selectImage}>
+        Select Image
       </Button>
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
 
       <Button loading={loading} mode="contained" onPress={onAddRecipePressed}>
-        <Text>Add Recipe</Text>
-      </Button> 
+        Add Recipe
+      </Button>
       <Toast message={error} onDismiss={() => setError('')} />
     </Background>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
   );
 };
 
@@ -220,19 +187,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
   },
   ingredientInputContainer: {
     flexGrow: 1,
-    flexBasis: '50%',
-    marginBottom: 10,
-    borderWidth: 0,
-    borderColor: "red",
-  },
-  timeAndUnitInputContainer: {
-    flexGrow: 1,
-    flexBasis: '20%',
+    flexBasis: '30%',
     marginBottom: 10,
   },
   ingredientInputName: {
@@ -240,7 +198,6 @@ const styles = StyleSheet.create({
     flexBasis: '40%',
     backgroundColor: theme.colors.surface,
     marginRight: 10,
-    borderColor: "red"
   },
   ingredientInputQuantity: {
     flexGrow: 1,
@@ -265,47 +222,6 @@ const styles = StyleSheet.create({
   },
   instructionInput: {
     flex: 1,
-    flexBasis: "80%",
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  container: {
-    backgroundColor: "#D9D9D9",
-    margin: 25,
-    borderRadius: 20,
-    paddingBottom: 20,
-  },
-  containerHeader: {
-    backgroundColor: "#CBB18A",
-    padding: 15,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  containerText: {
-    fontSize: 25,
-    fontWeight: "800",
-    color: "#333333",
-  },
-  containerRow: {
-    marginLeft: 20,
-    marginBottom: 5,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  dotContainer: {
-    marginRight: 5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dot: {
-    alignSelf: "center",
-  },
-  containerRowText: {
-    fontSize: 18,
-    // fontFamily: "Inter",
-    fontWeight: "500",
-    color: "#333333",
-  },
+  }
 
 });

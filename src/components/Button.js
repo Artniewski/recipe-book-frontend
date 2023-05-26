@@ -6,9 +6,11 @@ import { theme } from '../core/theme'
 export default function Button({ mode, style, ...props }) {
   return (
     <PaperButton
+    textColor='black'
       style={[
         styles.button,
         mode === 'outlined' && { backgroundColor: theme.colors.surface },
+        mode === 'contained' && {backgroundColor: "#CBB18A"},
         style,
       ]}
       labelStyle={styles.text}

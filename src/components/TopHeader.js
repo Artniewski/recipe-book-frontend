@@ -5,11 +5,20 @@ import { Svg, Path } from "react-native-svg";
 
 const window = Dimensions.get("window");
 
-export default function TopHeader({ recipeData, navigation }) {
+export default function TopHeader({ recipeData, navigation, headerText }) {
+  var title;
+  console.log("TUTAJ " + headerText)
+  if (recipeData == null){
+    title = headerText;
+  }
+  else {
+    title = recipeData.title;
+  }
+  // var title = recipeData == null ? headerText : recipeData.title;
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{recipeData.title}</Text>
+        <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.leftContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>

@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   Text,
+  Alert,
 } from "react-native";
 import RecipePreview from "../components/RecipePreview";
 import Background from "./Background";
@@ -24,6 +25,12 @@ export default function Favourite({ navigation }) {
     Math.floor((Dimensions.get("window").width - 10) / 170)
   );
 
+  const handleRefresh = () => {
+    console.log("Screen refreshed!");
+    fetchRecipes();
+    // Add any other refresh logic here
+  };
+
   if (Platform.OS === "web") {
     useLayoutEffect(() => {
       function handleLayout() {
@@ -40,6 +47,11 @@ export default function Favourite({ navigation }) {
     console.log("Fetching recipes...");
     fetchRecipes();
   }, []);
+
+  useEffect(() => {
+    const focusHandler = navigation.addListener('focus', handleRefresh);
+    return focusHandler;
+  }, [navigation]);
 
   return (
     <Background>

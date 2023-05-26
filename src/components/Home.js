@@ -15,6 +15,17 @@ import Background from "./Background";
 export default function Home({ navigation }) {
   const [recipes, setRecipes] = useState([]);
 
+  const handleRefresh = () => {
+    console.log("Screen refreshed!");
+    fetchRecipes();
+    // Add any other refresh logic here
+  };
+
+  useEffect(() => {
+    const focusHandler = navigation.addListener('focus', handleRefresh);
+    return focusHandler;
+  }, [navigation]);
+
   const fetchRecipes = async () => {
     const recipeList = await getAllRecipes();
     setRecipes(recipeList);

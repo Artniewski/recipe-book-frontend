@@ -22,6 +22,17 @@ export default function UserRecpies({navigation}) {
       fetchRecipes();
   }, []);
 
+  const handleRefresh = () => {
+    console.log("Screen refreshed!");
+    fetchRecipes();
+    // Add any other refresh logic here
+  };
+
+  useEffect(() => {
+    const focusHandler = navigation.addListener('focus', handleRefresh);
+    return focusHandler;
+  }, [navigation]);
+
 
   const [numColumns, setNumColumns] = useState(Math.floor((Dimensions.get('window').width-10)/170));
 

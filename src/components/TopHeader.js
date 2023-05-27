@@ -5,12 +5,16 @@ import { Svg, Path } from "react-native-svg";
 
 const window = Dimensions.get("window");
 
-export default function TopHeader({ recipeData, navigation, headerText }) {
+export default function TopHeader({
+  recipeData,
+  navigation,
+  headerText,
+  isAdd = false,
+}) {
   var title;
-  if (recipeData == null){
+  if (recipeData == null) {
     title = headerText;
-  }
-  else {
+  } else {
     title = recipeData.title;
   }
   // var title = recipeData == null ? headerText : recipeData.title;
@@ -24,11 +28,13 @@ export default function TopHeader({ recipeData, navigation, headerText }) {
           <IconBack style={styles.image} />
         </TouchableOpacity>
       </View>
-      <View style={styles.rightContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <IconHamburger style={styles.image} />
-        </TouchableOpacity>
-      </View>
+      {!{ isAdd } && (
+        <View style={styles.rightContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <IconHamburger style={styles.image} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -64,7 +70,7 @@ const IconHamburger = (props) => (
       d="M4 4h25.658M4 13h25.658M4 22h25.658"
     />
   </Svg>
-)
+);
 
 const styles = StyleSheet.create({
   container: {

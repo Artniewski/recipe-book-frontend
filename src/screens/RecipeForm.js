@@ -111,7 +111,11 @@ export default function AddRecipeScreen({ navigation }) {
       }}
     >
       <ScrollView>
-        <TopHeader navigation={navigation} headerText={"Add new recipe"} />
+        <TopHeader
+          navigation={navigation}
+          headerText={"Add new recipe"}
+          isAdd={true}
+        />
         <View style={{ backgroundColor: "#FFFFFF" }}>
           <Background>
             {

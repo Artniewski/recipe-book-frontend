@@ -99,6 +99,7 @@ export default function AddRecipeScreen({ navigation }) {
       setError(response.error);
     }
     setLoading(false);
+    navigation.goBack();
   };
 
   return (

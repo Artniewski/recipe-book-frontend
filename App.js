@@ -16,6 +16,7 @@ import {
   RecipeList,
   RecipeDetailsScreen,
   SearchScreen,
+  EditScreen,
 } from "./src/screens";
 
 const Stack = createNativeStackNavigator();
@@ -45,6 +46,7 @@ export default function App() {
             name="RecipeDetailsScreen"
             component={RecipeDetailsScreen}
           />
+          <Stack.Screen name="EditScreen" component={EditScreen} />
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}

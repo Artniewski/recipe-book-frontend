@@ -1,10 +1,10 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Provider } from 'react-native-paper'
+import { Provider } from "react-native-paper";
 
-import { theme } from './src/core/theme'
+import { theme } from "./src/core/theme";
 import {
   AuthLoadingScreen,
   StartScreen,
@@ -16,7 +16,7 @@ import {
   RecipeList,
   RecipeDetailsScreen,
   SearchScreen,
-} from './src/screens'
+} from "./src/screens";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +41,10 @@ export default function App() {
           <Stack.Screen name="RecipeForm" component={RecipeForm} />
           <Stack.Screen name="RecipeList" component={RecipeList} />
           <Stack.Screen name="SearchScreen" component={SearchScreen} />
-          <Stack.Screen name="RecipeDetailsScreen" component={RecipeDetailsScreen} />
+          <Stack.Screen
+            name="RecipeDetailsScreen"
+            component={RecipeDetailsScreen}
+          />
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}
@@ -49,5 +52,5 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
-  )
+  );
 }

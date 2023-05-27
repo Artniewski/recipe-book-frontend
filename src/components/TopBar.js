@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Searchbar } from 'react-native-paper';
 import { Svg, Path } from 'react-native-svg';
 

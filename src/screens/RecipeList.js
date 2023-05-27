@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList } from 'react-native';
-import { getAllRecipes } from '../api/recipe-api';
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, Image } from "react-native";
+import { getAllRecipes } from "../api/recipe-api";
 
 const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
@@ -28,7 +28,7 @@ const RecipeList = () => {
           <Text>Favorite Count: {item.fav_count}</Text>
           <Image
             source={{ uri: item.image }}
-            style={{ width: '100%', height: 200 }}
+            style={{ width: "100%", height: 200 }}
           />
         </View>
       )}

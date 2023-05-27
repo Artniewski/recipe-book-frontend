@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Image,
 } from "react-native";
 import Background from "../components/Background";
 // import Header from '../components/Header';
@@ -26,7 +26,6 @@ import {
 
 const RecipeDetailsScreen = ({ route, navigation }) => {
   const { recipeData } = route.params;
-  console.log(recipeData);
   const [isLiked, setIsLiked] = useState(false);
   const likePressed = () => {
     setIsLiked((prevIsLiked) => {
@@ -40,6 +39,7 @@ const RecipeDetailsScreen = ({ route, navigation }) => {
   };
   useEffect(() => {
     const checkRecipeFavorite = async () => {
+      console.log(recipeData);
       let liked = await isRecipeFavorite(recipeData.id);
       console.log(liked);
       setIsLiked(liked);
@@ -48,14 +48,22 @@ const RecipeDetailsScreen = ({ route, navigation }) => {
   }, []);
   const window = Dimensions.get("window");
   return (
-    <SafeAreaView style={{ height: "100%", width: "100%", flexGrow: 1 }}>
-      <StatusBar />
+    <SafeAreaView
+      style={{
+        height: "100%",
+        width: "100%",
+        flexGrow: 1,
+        backgroundColor: "#CBB18A",
+      }}
+    >
       <ScrollView>
         <TopHeader recipeData={recipeData} navigation={navigation} />
-        <Image style={styles.image} source={{ uri: recipeData.image }} />
-        <DetailBar recipeData={recipeData} />
-        <IngredientsView recipeData={recipeData} />
-        <StepsView recipeData={recipeData} />
+        <View style={{ backgroundColor: "#FFFFFF" }}>
+          <Image style={styles.image} source={{ uri: recipeData.image }} />
+          <DetailBar recipeData={recipeData} />
+          <IngredientsView recipeData={recipeData} />
+          <StepsView recipeData={recipeData} />
+        </View>
       </ScrollView>
       <FAB
         style={styles.fab}

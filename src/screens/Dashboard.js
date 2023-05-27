@@ -9,7 +9,8 @@ import {
   Dimensions,
   Image,
   StatusBar,
-  Text
+  Text,
+  Platform,
 } from "react-native";
 import { logoutUser } from "../api/auth-api";
 import Home from "../components/Home";
@@ -18,6 +19,7 @@ import Favourite from "../components/Favourite";
 import { Svg, Path } from "react-native-svg";
 import UserRecpies from "../components/UserRecipies";
 import { FAB } from "react-native-paper";
+import { func } from "prop-types";
 
 const IconGlobe = (props) => (
   <Svg
@@ -83,6 +85,40 @@ const IconUser = (props) => (
 const Tab = createBottomTabNavigator();
 
 export default function Dashboard({
+  navigation,
+  animatedValue,
+  visible,
+  extended,
+  label,
+  animateFrom,
+  style,
+  iconMode,
+}) {
+  if (Platform.OS === "ios") {
+    return IOSDashboard({
+      navigation,
+      animatedValue,
+      visible,
+      extended,
+      label,
+      animateFrom,
+      style,
+      iconMode,
+    });
+  }
+  return AndroidDashboard({
+    navigation,
+    animatedValue,
+    visible,
+    extended,
+    label,
+    animateFrom,
+    style,
+    iconMode,
+  });
+}
+
+function AndroidDashboard({
   navigation,
   animatedValue,
   visible,
@@ -183,6 +219,121 @@ export default function Dashboard({
   );
 }
 
+function IOSDashboard({
+  navigation,
+  animatedValue,
+  visible,
+  extended,
+  label,
+  animateFrom,
+  style,
+  iconMode,
+}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const handleMenuPress = () => {
+    console.log("pressed");
+    setMenuOpen(!menuOpen);
+  };
+
+  const onSearchPressed = () => {
+    console.log("search pressed");
+    navigation.navigate("SearchScreen");
+  };
+
+  const fabStyle = { [animateFrom]: 16 };
+
+  const HomeRoute = () => <Home navigation={navigation} />;
+  const FavRoute = () => <Favourite navigation={navigation} />;
+  const BookRoute = () => <UserRecpies navigation={navigation} />;
+
+  return (
+    <SafeAreaView
+      style={{
+        height: "100%",
+        width: "100%",
+        flexGrow: 1,
+        backgroundColor: "#CBB18A",
+      }}
+    >
+      <StatusBar backgroundColor="#CBB18A" barStyle="light-content" />
+      <TopBar
+        onHamburgerPressed={handleMenuPress}
+        onSearchPressed={onSearchPressed}
+        style={styles.topBar}
+      />
+
+      <View
+        style={{ height: "100%", width: "100%", backgroundColor: "#CBB18A" }}
+      >
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarActiveBackgroundColor: "#CBB18A",
+            tabBarInactiveBackgroundColor: "#CBB18A",
+            tabBarActiveTintColor: "white",
+            tabBarInactiveTintColor: "black",
+          })}
+          initialRouteName="Home"
+          barStyle={{ height: 75 }}
+        >
+          <Tab.Screen
+            name="Favourite"
+            component={FavRoute}
+            options={{
+              tabBarIcon: ({ focused, color, size }) => (
+                <IconHeart style={styles.image} color={color} />
+              ),
+              tabBarLabel: "",
+            }}
+          />
+          <Tab.Screen
+            name="Home"
+            component={HomeRoute}
+            options={{
+              tabBarIcon: ({ focused, color, size }) => (
+                <IconGlobe style={styles.image} color={color} />
+              ),
+              tabBarLabel: "",
+            }}
+          />
+          <Tab.Screen
+            name="Book"
+            component={BookRoute}
+            options={{
+              tabBarIcon: ({ focused, color, size }) => (
+                <IconUser style={styles.image} color={color} />
+              ),
+              tabBarLabel: "",
+            }}
+          />
+        </Tab.Navigator>
+
+        {menuOpen && (
+          <TouchableOpacity
+            style={styles.translucent}
+            onPress={handleMenuPress}
+          >
+            <View style={styles.hamburger}>
+              <Button mode="text" onPress={logoutUser}>
+                Logout
+              </Button>
+            </View>
+          </TouchableOpacity>
+        )}
+        <FAB
+          style={[styles.fab, style, fabStyle]}
+          icon="plus"
+          color="#ffffff"
+          onPress={() => navigation.navigate("RecipeForm")}
+          visible={visible}
+        />
+      </View>
+    </SafeAreaView>
+  );
+}
+
 const styles = StyleSheet.create({
   navBar: {
     backgroundColor: "red",
@@ -200,6 +351,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: "100%",
     width: "100%",
+    bottom: 0,
     zIndex: 3,
   },
 
@@ -210,6 +362,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
+    bottom: 0,
     zIndex: 4,
   },
   image: {
@@ -219,7 +372,7 @@ const styles = StyleSheet.create({
   fab: {
     position: "absolute",
     right: 16,
-    bottom: 66,
+    bottom: 86,
     zIndex: 3,
     backgroundColor: "#CBB18A",
   },

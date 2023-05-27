@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Image,
 } from "react-native";
 import Background from "../components/Background";
 // import Header from '../components/Header';

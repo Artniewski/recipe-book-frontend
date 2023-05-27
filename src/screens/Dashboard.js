@@ -119,9 +119,6 @@ export default function Dashboard({
         onSearchPressed={onSearchPressed}
         style={styles.topBar}
       />
-      <Button mode="contained" onPress={() => navigation.navigate("RecipeForm")}>
-        <Text>Add Recipe</Text>
-      </Button>
       <FAB
         style={[styles.fab, style, fabStyle]}
         icon="plus"
@@ -221,8 +218,8 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    right: 100,
-    bottom: 100,
+    right: 16,
+    bottom: 66,
     zIndex: 3,
     backgroundColor: "#CBB18A",
   },

@@ -7,7 +7,6 @@ const window = Dimensions.get("window");
 
 export default function TopHeader({ recipeData, navigation, headerText }) {
   var title;
-  console.log("TUTAJ " + headerText)
   if (recipeData == null){
     title = headerText;
   }
@@ -23,6 +22,11 @@ export default function TopHeader({ recipeData, navigation, headerText }) {
       <View style={styles.leftContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <IconBack style={styles.image} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.rightContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <IconHamburger style={styles.image} />
         </TouchableOpacity>
       </View>
     </View>
@@ -45,6 +49,23 @@ const IconBack = (props) => (
   </Svg>
 );
 
+const IconHamburger = (props) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 33 26"
+    fill="none"
+    {...props}
+  >
+    <Path
+      stroke="#000"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={6.553}
+      d="M4 4h25.658M4 13h25.658M4 22h25.658"
+    />
+  </Svg>
+)
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -58,6 +79,9 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     marginRight: 10,
+  },
+  rightContainer: {
+    marginLeft: "auto",
   },
   titleContainer: {
     position: "absolute",

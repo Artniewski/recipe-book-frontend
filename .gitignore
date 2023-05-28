@@ -154,3 +154,7 @@ web-build/
 .npmrc
 
 git_fix.sh
+
+.firebase/
+
+public/

@@ -4,8 +4,8 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
-     "site": "recipies-pwr", 
+    "public": "web-build",
+     "site": "recipes-pwr", 
     "ignore": [
       "firebase.json",
       "**/.*",

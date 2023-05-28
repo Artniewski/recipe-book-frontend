@@ -6,7 +6,10 @@ Zakłada on stworzenie aplikacji do przechowywania przepisów kulinarnych.
 - przeglądanie przepisów pobranych z serwera
 - dodawanie własnych przepisów
 - dodawanie przepisów do ulubionych
-- przepisy własne i ulubione przechowywane są lokalnie na wypadek braku internetu
 - wyszukiwanie przepisów po nazwie i składnikach
 - tworzenie kont
-- ocenianie przepisów (niski priorytet)
+
+## Użyte technologie:
+- react native
+- expo
+- firebase: firestore, storage, authentication, deploy

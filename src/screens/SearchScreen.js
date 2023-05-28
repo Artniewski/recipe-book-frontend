@@ -219,18 +219,21 @@ export default function SearchScreen({ navigation }) {
       <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={handleSearch} onTouchOutside={handleSearch}>
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>Search criteria</Text>
+          <Text style={styles.modalText}>Ingredients</Text>
           <TextInput
             style={styles.modalInput}
             placeholder="Ingredients"
             value={searchCriteria.ingredients}
             onChangeText={(value) => handleSearchCriteriaChange('ingredients', value)}
           />
+          <Text style={styles.modalText}>Author</Text>
           <TextInput
             style={styles.modalInput}
             placeholder="Author"
             value={searchCriteria.author}
             onChangeText={(value) => handleSearchCriteriaChange('author', value)}
           />
+          <Text style={styles.modalText}>Time</Text>
           <TextInput
             style={styles.modalInput}
             placeholder="Time"
@@ -292,6 +295,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   modalInput: {
     borderWidth: 1,

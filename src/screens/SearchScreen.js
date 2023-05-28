@@ -10,6 +10,11 @@ import {
   Dimensions,
   StatusBar,
   Platform,
+  Alert,
+  TextInput,
+  Modal,
+  Text,
+  TouchableWithoutFeedback
 } from "react-native";
 import { logoutUser } from "../api/auth-api";
 import Home from "../components/Home";
@@ -38,16 +43,30 @@ const IconBack = (props) => (
   </Svg>
 );
 
+const IconGear = (props) => (
+  <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={"black"} {...props}>
+    <Path d="M24 14v-4h-3.23a8.967 8.967 0 0 0-1.156-2.785L21.9 4.929 19.07 2.1l-2.286 2.286A8.937 8.937 0 0 0 14 3.23V0h-4v3.23a8.945 8.945 0 0 0-2.785 1.157L4.929 2.101 2.1 4.929l2.287 2.287A8.94 8.94 0 0 0 3.23 10H0v4h3.23a8.961 8.961 0 0 0 1.156 2.784L2.1 19.071 4.929 21.9l2.286-2.286A8.967 8.967 0 0 0 10 20.77V24h4v-3.23a8.937 8.937 0 0 0 2.784-1.156L19.07 21.9l2.828-2.829-2.285-2.286A8.943 8.943 0 0 0 20.769 14H24zm-12 2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+  </Svg>
+)
+
 export default function SearchScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
   const searchbarRef = useRef(null);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchCriteria, setSearchCriteria] = useState({ ingredients: '', author: '', time: '' });
 
   const fetchData = async (query) => {
-    if (query && query.length > 0) {
-      const searchFields = parseSearchString(query);
+      const searchFields = {
+        title: query,
+        ingredients: searchCriteria.ingredients.split(",").map((ingredient) => ingredient.trim()),
+        author: searchCriteria.author,
+        time: Number(searchCriteria.time),
+      }
+      searchFields.ingredients = searchFields.ingredients.filter((ingredient) => ingredient !== "");
+      console.log(searchFields)
       let searchRecipes = [...recipes];
       // Filter by title
       if (searchFields.title) {
@@ -89,9 +108,7 @@ export default function SearchScreen({ navigation }) {
       }
 
       setFilteredRecipes(searchRecipes);
-    } else {
-      setFilteredRecipes(recipes);
-    }
+    
   };
 
   const handleSearchQueryChange = (query) => {
@@ -122,6 +139,23 @@ export default function SearchScreen({ navigation }) {
   const [numColumns, setNumColumns] = useState(
     Math.floor((Dimensions.get("window").width - 10) / 170)
   );
+
+  const handleMoreOptions = () => {
+    setModalVisible(true);
+  };
+
+  const handleSearchCriteriaChange = (key, value) => {
+    setSearchCriteria({ ...searchCriteria, [key]: value });
+  };
+
+  const handleSearch = () => {
+    setModalVisible(false);
+    fetchData(searchQuery);
+  };
+
+  const handleClear = () => {
+    setSearchCriteria({ ingredients: '', author: '', time: '' });
+  };
 
   if (Platform.OS === "web") {
     useLayoutEffect(() => {
@@ -157,6 +191,9 @@ export default function SearchScreen({ navigation }) {
           style={styles.search}
           ref={searchbarRef}
         />
+        <TouchableOpacity onPress={handleMoreOptions}>
+          <IconGear style={styles.image} />
+        </TouchableOpacity>
       </View>
       <Background>
         <FlatList
@@ -179,6 +216,38 @@ export default function SearchScreen({ navigation }) {
           key={numColumns}
         ></FlatList>
       </Background>
+      <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={handleSearch} onTouchOutside={handleSearch}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Search criteria</Text>
+          <Text style={styles.modalText}>Ingredients</Text>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Ingredients"
+            value={searchCriteria.ingredients}
+            onChangeText={(value) => handleSearchCriteriaChange('ingredients', value)}
+          />
+          <Text style={styles.modalText}>Author</Text>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Author"
+            value={searchCriteria.author}
+            onChangeText={(value) => handleSearchCriteriaChange('author', value)}
+          />
+          <Text style={styles.modalText}>Time</Text>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Time"
+            value={searchCriteria.time}
+            onChangeText={(value) => handleSearchCriteriaChange('time', value)}
+          />
+          <TouchableOpacity style={styles.modalButton} onPress={handleSearch}>
+            <Text style={styles.modalButtonText}>Close</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.modalButton} onPress={handleClear}>
+            <Text style={styles.modalButtonText}>Clear</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -215,5 +284,37 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     paddingTop: 15,
     zIndex: 0,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  modalTitle: {
+    marginTop: 100,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  modalButton: {
+    backgroundColor: '#CBB18A',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  modalButtonText: {
+    color: '#fff',
+    textAlign: 'center',
   },
 });
